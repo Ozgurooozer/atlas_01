@@ -1,0 +1,119 @@
+name: CI Gate
+
+# AGENT_RULES.md compliance gate
+# Her push ve PR'da otomatik kontrol
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov ruff
+
+      # ================================
+      # PRE-COMMIT STYLE CHECKS
+      # ================================
+
+      - name: Layer Import Check
+        run: python scripts/check_layer_imports.py
+
+      - name: Class Size Check
+        run: python scripts/check_class_size.py
+
+      - name: Mock Usage Check
+        run: python scripts/check_no_mock.py
+
+      - name: Star Import Check
+        run: python scripts/check_no_star_import.py
+
+      # ================================
+      # LINTING & FORMATTING
+      # ================================
+
+      - name: Ruff Lint
+        run: ruff check . --exclude=tests
+
+      # ================================
+      # TESTS
+      # ================================
+
+      - name: Run All Tests
+        run: |
+          pytest tests/ -v --tb=short --cov=. --cov-report=term-missing
+
+      - name: Coverage Check (>90%)
+        run: |
+          coverage report --fail-under=90
+
+      # ================================
+      # DEMO GAMES
+      # ================================
+
+      - name: Demo Games Test
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, '.')
+          
+          from demo.bouncing_ball import BouncingBallGame
+          from demo.platformer import PlatformerGame
+          from demo.shooter import ShooterGame
+          from demo.puzzle import PuzzleGame
+
+          games = [
+              ('BouncingBall', BouncingBallGame),
+              ('Platformer', PlatformerGame),
+              ('Shooter', ShooterGame),
+              ('Puzzle', PuzzleGame),
+          ]
+
+          for name, GameClass in games:
+              try:
+                  game = GameClass()
+                  game.initialize()
+                  game.run(duration=0.1)
+                  print(f'OK: {name}')
+              except Exception as e:
+                  print(f'FAIL: {name} - {e}')
+                  sys.exit(1)
+
+          print('All demo games OK!')
+          "
+
+      # ================================
+      # FINAL REPORT
+      # ================================
+
+      - name: CI Gate Passed
+        run: |
+          echo ""
+          echo "============================================"
+          echo "ALL CI GATES PASSED!"
+          echo "============================================"
+          echo "Layer imports: OK"
+          echo "Class sizes: OK"
+          echo "No mock usage: OK"
+          echo "All tests: PASS"
+          echo "Coverage: >90%"
+          echo "Demo games: OK"
+          echo "============================================"

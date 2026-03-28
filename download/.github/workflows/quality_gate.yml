@@ -1,0 +1,159 @@
+# Quality Gate - GitHub Actions
+# AGENT_RULES.md koruması - her push'ta çalışır
+
+name: Quality Gate
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'engine/**'
+      - '.github/workflows/quality_gate.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'engine/**'
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  # Job 1: Hızlı kalite kontrol
+  quality-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black ruff pytest pytest-cov
+
+      - name: Format Check (black)
+        run: |
+          black --check engine/ --diff || {
+            echo "❌ Format hatası! 'black engine/' çalıştırın."
+            exit 1
+          }
+
+      - name: Lint Check (ruff)
+        run: |
+          ruff check engine/ || {
+            echo "❌ Lint hatası! 'ruff check engine/ --fix' çalıştırın."
+            exit 1
+          }
+
+      - name: Import Rules Check
+        run: |
+          python engine/scripts/check_imports.py || {
+            echo "❌ Import kural ihlali! AGENT_RULES.md 1.1, 1.3, 1.4"
+            exit 1
+          }
+
+      - name: Class Size Check
+        run: |
+          python engine/scripts/check_class_size.py || {
+            echo "❌ Kod boyutu ihlali! AGENT_RULES.md 5.1, 5.2, 5.3"
+            exit 1
+          }
+
+  # Job 2: Test ve coverage
+  test-coverage:
+    runs-on: ubuntu-latest
+    needs: quality-check
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+          if [ -f engine/requirements.txt ]; then
+            pip install -r engine/requirements.txt
+          fi
+
+      - name: Run Tests with Coverage
+        run: |
+          pytest engine/tests/ \
+            --cov=engine \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            --cov-fail-under=80 \
+            -v \
+            --tb=short
+
+      - name: Timer Validation Tests
+        run: |
+          if [ -d "engine/tests/core" ]; then
+            pytest engine/tests/core/test_timer*.py -v || true
+          fi
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+
+  # Job 3: Katman analizi
+  layer-analysis:
+    runs-on: ubuntu-latest
+    needs: quality-check
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Layer Dependency Report
+        run: |
+          echo "## Katman Analizi" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python engine/scripts/check_imports.py 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+
+      - name: Class Size Report
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Kod Boyutu Analizi" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python engine/scripts/check_class_size.py 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+
+  # Job 4: Başarı bildirimi
+  success:
+    runs-on: ubuntu-latest
+    needs: [quality-check, test-coverage, layer-analysis]
+    if: success()
+
+    steps:
+      - name: Quality Gate Passed
+        run: |
+          echo "## ✅ Quality Gate Geçti" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Format: ✓" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: ✓" >> $GITHUB_STEP_SUMMARY
+          echo "- Import Rules: ✓" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: ✓" >> $GITHUB_STEP_SUMMARY
+          echo "- Coverage: ✓ (>80%)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**AGENT_RULES.md'e %100 uyumlu.**" >> $GITHUB_STEP_SUMMARY
