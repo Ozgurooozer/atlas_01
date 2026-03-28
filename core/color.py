@@ -75,5 +75,25 @@ class Color:
     def to_tuple(self) -> Tuple[float, float, float, float]:
         return (self.r, self.g, self.b, self.a)
 
+    @staticmethod
+    def lerp(a: "Color", b: "Color", t: float) -> "Color":
+        """Linearly interpolate between two colors.
+
+        Args:
+            a: Start color
+            b: End color
+            t: Interpolation factor (0.0 to 1.0)
+
+        Returns:
+            Interpolated color
+        """
+        t = max(0.0, min(1.0, t))
+        return Color(
+            a.r + (b.r - a.r) * t,
+            a.g + (b.g - a.g) * t,
+            a.b + (b.b - a.b) * t,
+            a.a + (b.a - a.a) * t,
+        )
+
     def __repr__(self) -> str:
         return f"Color({self.r:.2f}, {self.g:.2f}, {self.b:.2f}, {self.a:.2f})"

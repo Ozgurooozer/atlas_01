@@ -1,25 +1,16 @@
-# 2D Game Engine Dependencies
-# ============================
-
-# Platform/Window Layer (Layer 0)
-pyglet>=2.0
-moderngl>=5.10
-
-# Physics (Layer 2)
-pymunk>=7.2
-
-# Asset/Image Processing (Layer 2)
-Pillow>=10.0
-
-# Serialization (Layer 1) - Fast alternative to JSON
-msgspec>=0.18
-
-# Hot Reload (Layer 2)
-watchdog>=4.0
-
-# Editor UI (Layer 7)
-dearpygui>=1.13
-
-# Development/Testing
-pytest>=8.0
-pytest-asyncio>=0.23
+﻿cffi==2.0.0
+colorama==0.4.6
+dearpygui==2.2
+glcontext==3.0.0
+iniconfig==2.3.0
+moderngl==5.12.0
+msgspec==0.20.0
+packaging==26.0
+pillow==12.1.1
+pluggy==1.6.0
+pycparser==3.0
+pyglet==2.1.13
+Pygments==2.19.2
+pymunk==7.2.0
+pytest==9.0.2
+watchdog==6.0.0
