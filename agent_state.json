@@ -96,8 +96,8 @@
         "12.3": {
           "name": "FAZ 3: Directional Sprites",
           "description": "Multi-directional sprites + Billboard + Rotation smoothing",
-          "status": "pending",
-          "test_count": 0
+          "status": "completed",
+          "test_count": 13
         },
         "12.4": {
           "name": "FAZ 4: Advanced VFX",
@@ -159,17 +159,17 @@
   },
 
   "statistics": {
-    "total_tests": 1392,
-    "passed_tests": 1392,
+    "total_tests": 1405,
+    "passed_tests": 1405,
     "skipped_tests": 2,
     "failed_tests": 0,
-    "test_files": 39,
-    "source_files": 37,
-    "coverage_percent": 87,
+    "test_files": 40,
+    "source_files": 38,
+    "coverage_percent": 88,
     "faz_12_progress": {
       "faz_1_isometric": "100% (27/27 tests)",
       "faz_2_lighting": "100% (25/25 tests)",
-      "faz_3_directional": "0% (pending)",
+      "faz_3_directional": "100% (13/13 tests)",
       "faz_4_vfx": "0% (pending)",
       "faz_5_polish": "0% (pending)"
     }
