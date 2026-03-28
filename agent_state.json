@@ -6,8 +6,8 @@
     "created": "2026-03-27"
   },
 
-  "current_phase": 11,
-  "current_step": "11.1",
+  "current_phase": 12,
+  "current_step": "12.1",
 
   "phases": {
     "1": {
@@ -74,41 +74,41 @@
       "name": "ADVANCED RENDERER INTEGRATION",
       "description": "Shader + Animation + Light + Spritesheet systems from test_engine",
       "status": "completed",
+      "test_count": 44
+    },
+    "12": {
+      "name": "2.5D ISOMETRIC RENDERING",
+      "description": "Hades-level 2.5D rendering with isometric projection, height system, advanced lighting",
+      "status": "in_progress",
       "steps": {
-        "11.1": {
-          "name": "engine/renderer/shader.py",
-          "description": "Shader + ShaderLibrary with uniform caching",
+        "12.1": {
+          "name": "FAZ 1: Isometric Foundation",
+          "description": "IsometricProjection + HeightSprite + HeightMap + LayerManager",
           "status": "completed",
-          "test_count": 7
+          "test_count": 27
         },
-        "11.2": {
-          "name": "engine/renderer/animation.py",
-          "description": "Animation + AnimationPlayer with loop/one_shot/ping_pong modes",
+        "12.2": {
+          "name": "FAZ 2: Advanced Lighting",
+          "description": "Normal maps + Soft shadows + 3D-positioned lights",
           "status": "completed",
-          "test_count": 13
+          "test_count": 25
         },
-        "11.3": {
-          "name": "engine/renderer/light.py",
-          "description": "Light2D + LightMap + LightRenderer with ambient support",
-          "status": "completed",
-          "test_count": 9
+        "12.3": {
+          "name": "FAZ 3: Directional Sprites",
+          "description": "Multi-directional sprites + Billboard + Rotation smoothing",
+          "status": "pending",
+          "test_count": 0
         },
-        "11.4": {
-          "name": "engine/renderer/spritesheet.py",
-          "description": "Spritesheet with grid slicing + Aseprite JSON import",
-          "status": "completed",
-          "test_count": 8
+        "12.4": {
+          "name": "FAZ 4: Advanced VFX",
+          "description": "3D particles + Volumetric effects + Post-process stack",
+          "status": "pending",
+          "test_count": 0
         },
-        "11.5": {
-          "name": "core/color.py",
-          "description": "Color class with RGBA and preset colors",
-          "status": "completed",
-          "test_count": 7
-        },
-        "11.6": {
-          "name": "core/vec.py additions",
-          "description": "Vec2.zero() method added",
-          "status": "completed",
+        "12.5": {
+          "name": "FAZ 5: Polish & Optimization",
+          "description": "SDF fonts + Combat polish + Performance optimization",
+          "status": "pending",
           "test_count": 0
         }
       }
@@ -159,12 +159,19 @@
   },
 
   "statistics": {
-    "total_tests": 1340,
-    "passed_tests": 1340,
+    "total_tests": 1392,
+    "passed_tests": 1392,
     "skipped_tests": 2,
     "failed_tests": 0,
-    "test_files": 34,
-    "source_files": 32,
-    "coverage_percent": 85
+    "test_files": 39,
+    "source_files": 37,
+    "coverage_percent": 87,
+    "faz_12_progress": {
+      "faz_1_isometric": "100% (27/27 tests)",
+      "faz_2_lighting": "100% (25/25 tests)",
+      "faz_3_directional": "0% (pending)",
+      "faz_4_vfx": "0% (pending)",
+      "faz_5_polish": "0% (pending)"
+    }
   }
 }
