@@ -1,0 +1,4 @@
+# file: D:\alt001\hal\pyglet_backend.py
+# hypothesis_version: 6.151.10
+
+[0.0, 1.0, 2.0, 600, 800, '2f 2f 4f', '32f', 'Engine', 'IFramebuffer', 'a_color', 'a_position', 'a_texcoord', 'button', 'dx', 'dy', 'height', 'key_press', 'key_release', 'moderngl.Context', 'moderngl.Program', 'moderngl.Texture', 'modifiers', 'mouse_motion', 'mouse_press', 'mouse_release', 'resize', 'symbol', 'type', 'width', 'x', 'y']

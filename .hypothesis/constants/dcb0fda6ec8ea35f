@@ -1,0 +1,4 @@
+# file: D:\alt001\ui\button.py
+# hypothesis_version: 6.151.10
+
+[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 100, 'disabled', 'hover', 'normal', 'pressed']

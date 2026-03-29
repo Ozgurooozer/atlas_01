@@ -1,0 +1,4 @@
+# file: D:\alt001\engine\renderer\soft_shadows.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.5, 0.8, 1.0, 1.5, 2.0, 50.0, 100.0, 'Shadow', 'ShadowLight']

@@ -1,0 +1,4 @@
+# file: D:\alt001\engine\renderer\layer_manager.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.5, -100, 100, 'DepthSortKey', 'background', 'characters', 'draw_sprite', 'floor', 'fx_back', 'fx_front', 'shadow', 'ui']

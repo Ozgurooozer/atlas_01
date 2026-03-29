@@ -1,0 +1,4 @@
+# file: D:\alt001\engine\renderer\light.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.1, 1.0, 2.0, 200.0, 'ambient', 'directional', 'point']

@@ -195,6 +195,32 @@ class AssetManager(IAssetManager):
         """
         return path in self._cache
 
+    def load_texture(self, path: str) -> "Texture":
+        """
+        Load a texture from the filesystem.
+
+        Returns cached texture if already loaded.
+        Uses Texture.from_bytes to decode image data.
+
+        Args:
+            path: File path to the image asset
+
+        Returns:
+            Loaded Texture instance
+
+        Raises:
+            RuntimeError: If no filesystem has been set
+        """
+        if path in self._cache:
+            return self._cache[path]
+        if self._filesystem is None:
+            raise RuntimeError("No filesystem set")
+        data = self._filesystem.read_file(path)
+        from engine.renderer.texture import Texture
+        texture = Texture.from_bytes(data)
+        self._cache[path] = texture
+        return texture
+
     def clear_cache(self) -> None:
         """Clear all cached assets."""
         self._cache.clear()

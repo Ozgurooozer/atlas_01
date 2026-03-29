@@ -1,0 +1,4 @@
+# file: D:\alt001\engine\renderer\normal_lighting.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.2, 0.5, 0.8, 1.0, 32.0, 100.0, 500.0]

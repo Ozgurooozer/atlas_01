@@ -1,0 +1,4 @@
+# file: D:\alt001\ui\settings_menu.py
+# hypothesis_version: 6.151.10
+
+[0.0, 1.0, 2.0, 240, '1280x720', '1920x1080', '2560x1440', '3840x2160', 'Brightness', 'Fullscreen', 'Master Volume', 'Music Volume', 'Mute on Focus Loss', 'Resolution', 'SFX Volume', 'Show FPS', 'Target FPS', 'VSync', 'audio', 'master_volume', 'music_volume', 'mute_on_focus_loss', 'settings.json', 'sfx_volume', 'video', 'x']

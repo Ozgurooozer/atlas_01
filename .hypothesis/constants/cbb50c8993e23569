@@ -1,0 +1,4 @@
+# file: D:\alt001\demo\platformer.py
+# hypothesis_version: 6.151.10
+
+[-900.0, 0.0, 0.016, 0.1, 0.2, 0.3, 0.5, 1.0, 10.0, 12.0, 20.0, 24.0, 32.0, 48.0, 50.0, 80.0, 100.0, 120.0, 150.0, 200.0, 250.0, 280.0, 300.0, 330.0, 350.0, 400.0, 420.0, 500.0, 600.0, 800.0, 100, 150, 215, 255, 600, 800, 'Coin', 'Ground', 'LEFT', 'MovingPlatform', 'Platform', 'PlatformerWorld', 'Player', 'RIGHT', 'SPACE', 'UP', 'renderer']
