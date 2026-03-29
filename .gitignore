@@ -38,6 +38,10 @@ ENV/
 htmlcov/
 .tox/
 
+# Type checking / Linting cache
+.mypy_cache/
+.ruff_cache/
+
 # OS
 .DS_Store
 Thumbs.db
@@ -46,3 +50,6 @@ Thumbs.db
 *.log
 *.tmp
 assets/.*  # Ignore hidden files in assets but not assets itself
+
+# Kiro IDE settings (may contain secrets)
+.kiro/

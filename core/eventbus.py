@@ -82,7 +82,10 @@ class EventBus:
 
         event_data = data if data is not None else {}
         for handler in handlers:
-            handler(event_data)
+            try:
+                handler(event_data)
+            except Exception:
+                pass  # Handler exception diğer handler'ları engellemez
 
         return True
 

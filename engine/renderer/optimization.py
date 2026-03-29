@@ -5,13 +5,10 @@ Provides performance optimizations for 2.5D rendering.
 Layer: 2 (Engine)
 Dependencies: core.vec
 """
-from typing import List, Dict, Set, Tuple, Optional, Generic, TypeVar
-import math
+from typing import List, Dict, Set, Tuple, Optional
+from math import sqrt
 from core.vec import Vec2, Vec3
 from core.color import Color
-
-
-T = TypeVar('T')
 
 
 class SpatialHash:

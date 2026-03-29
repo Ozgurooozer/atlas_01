@@ -2,7 +2,7 @@
 
 Provides high-quality, scalable text rendering for 2.5D games.
 
-Layer: 6 (UI)
+Layer: 2 (Engine)
 Dependencies: core.vec, core.color
 """
 from typing import Dict, List, Tuple, Optional

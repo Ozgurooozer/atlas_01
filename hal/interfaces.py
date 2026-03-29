@@ -219,6 +219,19 @@ class IFilesystem(ABC):
         """
         pass
 
+    @abstractmethod
+    def delete_file(self, path: str) -> None:
+        """
+        Delete a file.
+
+        Args:
+            path: File path to delete
+
+        Raises:
+            FileNotFoundError: If file does not exist
+        """
+        pass
+
 
 class IClock(ABC):
     """

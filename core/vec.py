@@ -72,6 +72,10 @@ class Vec2:
             return False
         return self.x == other.x and self.y == other.y
 
+    def __hash__(self) -> int:
+        """Hash for use in sets/dicts."""
+        return hash((self.x, self.y))
+
     def __getitem__(self, index: int) -> float:
         """Get component by index (0=x, 1=y)."""
         if index == 0:
@@ -305,6 +309,10 @@ class Vec3:
         if not isinstance(other, Vec3):
             return False
         return self.x == other.x and self.y == other.y and self.z == other.z
+
+    def __hash__(self) -> int:
+        """Hash for use in sets/dicts."""
+        return hash((self.x, self.y, self.z))
 
     def __repr__(self) -> str:
         """String representation."""

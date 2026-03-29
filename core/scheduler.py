@@ -84,6 +84,7 @@ class Scheduler:
         self._delayed: List[DelayedCall] = []
         self._repeating: List[RepeatedCall] = []
         self._next_handle: int = 1
+        self._cancelled: set = set()  # O(1) cancel kontrolü için
 
     @property
     def pending_count(self) -> int:
@@ -182,12 +183,14 @@ class Scheduler:
         for i, call in enumerate(self._delayed):
             if call.handle == handle:
                 self._delayed.pop(i)
+                self._cancelled.add(handle)
                 return True
 
         # Check repeating calls
         for i, call in enumerate(self._repeating):
             if call.handle == handle:
                 self._repeating.pop(i)
+                self._cancelled.add(handle)
                 return True
 
         return False
@@ -200,6 +203,7 @@ class Scheduler:
         """
         self._delayed.clear()
         self._repeating.clear()
+        self._cancelled.clear()
 
     def tick(self, dt: float) -> None:
         """
@@ -222,46 +226,37 @@ class Scheduler:
             ...         scheduler.tick(dt)
         """
         # Process delayed calls
-        # Use slice copy to allow modification during iteration
         for call in self._delayed[:]:
             call.remaining -= dt
-
             if call.remaining <= 0:
-                # Execute callback
-                try:
-                    call.callback()
-                except Exception:
-                    pass  # Ignore exceptions in callbacks
-
-                # Remove executed call
-                if call in self._delayed:
-                    self._delayed.remove(call)
+                self._delayed.remove(call)
+                if call.handle not in self._cancelled:
+                    try:
+                        call.callback()
+                    except Exception:
+                        pass
 
         # Process repeating calls
         for call in self._repeating[:]:
-            # Special case: zero interval = execute once per tick
+            if call.handle in self._cancelled:
+                continue
+
             if call.interval <= 0:
-                if call in self._repeating:
-                    try:
-                        call.callback()
-                    except Exception:
-                        pass  # Ignore exceptions in callbacks
+                try:
+                    call.callback()
+                except Exception:
+                    pass
                 continue
 
             call.accumulator += dt
-
-            # Execute as many times as intervals have passed
             while call.accumulator >= call.interval:
                 call.accumulator -= call.interval
-
-                # Check if still in list (may have been cancelled)
-                if call in self._repeating:
-                    try:
-                        call.callback()
-                    except Exception:
-                        pass  # Ignore exceptions in callbacks
-                else:
-                    break  # Was cancelled during execution
+                if call.handle in self._cancelled:
+                    break
+                try:
+                    call.callback()
+                except Exception:
+                    pass
 
 
 __all__ = ['Scheduler', 'DelayedCall', 'RepeatedCall']

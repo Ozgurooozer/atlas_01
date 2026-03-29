@@ -142,8 +142,8 @@ class Button:
         for callback in self._callbacks:
             try:
                 callback()
-            except Exception as e:
-                print(f"Button callback error: {e}")
+            except Exception:
+                pass
     
     def on_hover_enter(self) -> None:
         """Called when mouse enters button."""

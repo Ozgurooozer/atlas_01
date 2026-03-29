@@ -124,24 +124,23 @@ class OSFilesystem(IFilesystem):
         except ValueError:
             return False
 
-    def delete_file(self, path: str) -> bool:
+    def delete_file(self, path: str) -> None:
         """
         Delete a file.
 
         Args:
             path: File path to delete
 
-        Returns:
-            True if file was deleted, False if it didn't exist
+        Raises:
+            FileNotFoundError: If file does not exist
         """
         try:
             resolved = self._resolve_path(path)
-            if resolved.exists() and resolved.is_file():
-                resolved.unlink()
-                return True
-            return False
         except ValueError:
-            return False
+            raise FileNotFoundError(f"File not found: {path}")
+        if not resolved.exists() or not resolved.is_file():
+            raise FileNotFoundError(f"File not found: {path}")
+        resolved.unlink()
 
     def list_files(self, directory: str = "") -> List[str]:
         """

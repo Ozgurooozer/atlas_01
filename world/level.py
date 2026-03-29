@@ -223,7 +223,10 @@ class Level:
             return
         
         for actor in self.actors:
-            if hasattr(actor, 'tick'):
+            if hasattr(actor, 'tick') and hasattr(actor, 'enabled'):
+                if actor.enabled:
+                    actor.tick(dt)
+            elif hasattr(actor, 'tick'):
                 actor.tick(dt)
     
     def get_actors_by_tag(self, tag: str) -> List[Any]:

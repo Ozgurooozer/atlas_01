@@ -172,25 +172,41 @@ class OverlapDetector:
 
         Calls on_overlap_begin and on_overlap_end callbacks.
         Should be called once per frame.
+        
+        Note: Each overlap pair fires callbacks once (A->B only, not B->A).
         """
-        new_overlaps: Dict[int, Set[int]] = {}
+        new_overlaps: Dict[int, Set[int]] = {cid: set() for cid in self._colliders}
+        checked_pairs: Set[Tuple[int, int]] = set()
 
         for collider_id in self._colliders:
-            new_overlaps[collider_id] = self.check_overlaps(collider_id)
+            aabb, _ = self._colliders[collider_id]
+            nearby = self._spatial_hash.query_nearby(aabb)
+
+            for other_id in nearby:
+                if other_id == collider_id:
+                    continue
+
+                # Skip already-checked pairs to avoid duplicate events
+                pair = (min(collider_id, other_id), max(collider_id, other_id))
+                if pair in checked_pairs:
+                    continue
+                checked_pairs.add(pair)
+
+                other_aabb, _ = self._colliders[other_id]
+                if aabb.overlaps(other_aabb):
+                    new_overlaps[collider_id].add(other_id)
+                    new_overlaps[other_id].add(collider_id)
 
         # Detect overlap events
         for collider_id, current_overlaps in new_overlaps.items():
             previous_overlaps = self._active_overlaps.get(collider_id, set())
 
-            # Overlap began
             for other_id in current_overlaps - previous_overlaps:
                 if self.on_overlap_begin:
                     self.on_overlap_begin(collider_id, other_id)
 
-            # Overlap ended
             for other_id in previous_overlaps - current_overlaps:
                 if self.on_overlap_end:
                     self.on_overlap_end(collider_id, other_id)
 
-        # Update active overlaps
         self._active_overlaps = new_overlaps

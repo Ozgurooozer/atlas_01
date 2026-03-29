@@ -6,7 +6,7 @@ Layer: 2 (Engine)
 Dependencies: core.vec, core.color, engine.renderer.texture
 """
 from typing import List, Tuple, Optional
-from math import sqrt, pow
+from math import sqrt
 from core.vec import Vec2, Vec3
 from core.color import Color
 

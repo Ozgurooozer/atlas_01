@@ -90,9 +90,8 @@ class AudioSystem(ISubsystem):
         """Müzik ses seviyesi (0.0 - 1.0)."""
         return self._music_volume
 
-    def initialize(self) -> None:
+    def initialize(self, engine=None) -> None:
         """Audio sistemini başlat."""
-        # pyglet media player başlat
         self._initialized = True
 
     def shutdown(self) -> None:
@@ -202,9 +201,6 @@ class AudioSystem(ISubsystem):
             self._current_music_player.queue(music._source)
 
             if loop:
-                # pyglet'te loop için special handling
-                from pyglet.media import SourceGroup
-                # Loop için source'u tekrar queue'la
                 self._current_music_player.loop = True
 
             self._current_music_player.play()

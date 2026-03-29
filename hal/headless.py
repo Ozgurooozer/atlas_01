@@ -182,6 +182,20 @@ class MemoryFilesystem(IFilesystem):
         """
         return path in self._files
 
+    def delete_file(self, path: str) -> None:
+        """
+        Delete file from memory.
+
+        Args:
+            path: File path
+
+        Raises:
+            FileNotFoundError: If file does not exist
+        """
+        if path not in self._files:
+            raise FileNotFoundError(f"File not found: {path}")
+        del self._files[path]
+
 
 class FixedClock(IClock):
     """

@@ -7,7 +7,6 @@ Layer: 2 (Engine)
 Dependencies: core.color
 """
 from typing import List, Optional
-from math import exp, pow, sqrt
 from core.color import Color
 
 

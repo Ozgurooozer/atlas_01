@@ -152,14 +152,12 @@ class Physics2D(IPhysics):
 
         gx, gy = self._gravity
 
-        for body_id, body in self._bodies.items():
-            # Apply gravity to velocity
+        for body_id, body in list(self._bodies.items()):
             vx, vy = body["velocity"]
             vx += gx * dt
             vy += gy * dt
             body["velocity"] = (vx, vy)
 
-            # Apply velocity to position
             x, y = body["position"]
             x += vx * dt
             y += vy * dt

@@ -50,6 +50,7 @@ class World(Object):
         """
         super().__init__(name)
         self._actors: List[Actor] = []
+        self._actors_by_name: Dict[str, Actor] = {}  # O(1) name lookup
         self._enabled: bool = True
 
     @property
@@ -87,6 +88,7 @@ class World(Object):
         if actor in self._actors:
             raise ValueError(f"Actor '{actor.name}' is already spawned in this world")
         self._actors.append(actor)
+        self._actors_by_name[actor.name] = actor
         actor.world = self
         actor.on_created()
 
@@ -106,22 +108,20 @@ class World(Object):
             raise ValueError(f"Actor '{actor.name}' is not in this world")
         actor.on_destroyed()
         actor.world = None
+        self._actors_by_name.pop(actor.name, None)
         self._actors.remove(actor)
 
     def get_actor_by_name(self, name: str) -> Optional[Actor]:
         """
-        Find an Actor by name.
+        Find an Actor by name. O(1) lookup.
 
         Args:
             name: The name to search for
 
         Returns:
-            The first Actor with the given name, or None if not found
+            The Actor with the given name, or None if not found
         """
-        for actor in self._actors:
-            if actor.name == name:
-                return actor
-        return None
+        return self._actors_by_name.get(name)
 
     def get_actors_by_type(self, actor_type: Type[Actor]) -> List[Actor]:
         """

@@ -119,15 +119,21 @@ def get_properties(cls_or_instance) -> List[PropertyMeta]:
         cls = cls_or_instance
 
     properties = []
+    seen_names = set()
 
-    # Walk through class hierarchy
-    for klass in cls.__mro__:
-        for name, value in vars(klass).items():
-            # Check for ReflectedProperty or property with _property_meta
-            if isinstance(value, property) and hasattr(value, '_property_meta'):
-                # Avoid duplicates from inheritance
-                if not any(p.name == value._property_meta.name for p in properties):
-                    properties.append(value._property_meta)
+    # getattr üzerinden MRO'yu dolaş — vars() inherited property'leri kaçırabilir
+    for name in dir(cls):
+        if name.startswith("_"):
+            continue
+        try:
+            value = getattr(cls, name)
+        except AttributeError:
+            continue
+        if isinstance(value, property) and hasattr(value, '_property_meta'):
+            meta = value._property_meta
+            if meta.name not in seen_names:
+                seen_names.add(meta.name)
+                properties.append(meta)
 
     return properties
 

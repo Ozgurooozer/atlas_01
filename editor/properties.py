@@ -95,26 +95,19 @@ class Properties(EditorPanel):
                 pass
 
     def _get_property_value(self, name: str) -> Any:
-        """Get property value from target.
-
-        Args:
-            name: Property name.
-
-        Returns:
-            Property value.
-        """
+        """Get property value from target."""
         if self._target is None:
             return None
 
-        # Try direct attribute access for non-reflected properties
-        if hasattr(self._target, name):
-            return getattr(self._target, name)
-
-        # Try reflected property
+        # Reflected property önce dene
         for prop in self._properties:
             if prop.name == name:
                 from core.reflection import get_property_value
                 return get_property_value(self._target, name)
+
+        # Fallback: direkt attribute
+        if hasattr(self._target, name):
+            return getattr(self._target, name)
 
         return None
 

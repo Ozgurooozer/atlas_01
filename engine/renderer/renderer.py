@@ -210,6 +210,21 @@ class Renderer2D(IRenderer):
         if self._gpu_device:
             self._gpu_device.flush()
 
+    def _ensure_uploaded(self, texture: "Texture") -> None:
+        """Texture GPU'ya yüklenmemişse yükle."""
+        if not texture.is_uploaded and self._gpu_device:
+            gpu_id = self._gpu_device.create_texture(
+                texture.width, texture.height, texture.data
+            )
+            texture.mark_uploaded(gpu_id)
+
+    def _track_texture(self, texture: "Texture") -> None:
+        """Draw istatistiklerini güncelle."""
+        self._draw_count += 1
+        if texture.gpu_id not in self._used_textures:
+            self._used_textures.add(texture.gpu_id)
+            self._texture_count += 1
+
     def draw_sprite(self, sprite: "Sprite") -> None:
         """
         Draw a sprite.
@@ -233,13 +248,7 @@ class Renderer2D(IRenderer):
 
         # Upload texture to GPU if needed
         texture = sprite.texture
-        if not texture.is_uploaded:
-            gpu_id = self._gpu_device.create_texture(
-                texture.width,
-                texture.height,
-                texture.data
-            )
-            texture.mark_uploaded(gpu_id)
+        self._ensure_uploaded(texture)
 
         # Calculate draw parameters
         x = sprite.position.x
@@ -247,14 +256,8 @@ class Renderer2D(IRenderer):
         width = sprite.width
         height = sprite.height
 
-        # Draw the sprite
         self._gpu_device.draw(texture.gpu_id, x, y, width, height)
-
-        # Update statistics
-        self._draw_count += 1
-        if texture.gpu_id not in self._used_textures:
-            self._used_textures.add(texture.gpu_id)
-            self._texture_count += 1
+        self._track_texture(texture)
 
     def draw_texture(
         self,
@@ -279,25 +282,12 @@ class Renderer2D(IRenderer):
             return
 
         # Upload texture to GPU if needed
-        if not texture.is_uploaded:
-            gpu_id = self._gpu_device.create_texture(
-                texture.width,
-                texture.height,
-                texture.data
-            )
-            texture.mark_uploaded(gpu_id)
+        self._ensure_uploaded(texture)
 
-        # Use texture dimensions if not specified
         if width is None:
             width = float(texture.width)
         if height is None:
             height = float(texture.height)
 
-        # Draw the texture
         self._gpu_device.draw(texture.gpu_id, x, y, width, height)
-
-        # Update statistics
-        self._draw_count += 1
-        if texture.gpu_id not in self._used_textures:
-            self._used_textures.add(texture.gpu_id)
-            self._texture_count += 1
+        self._track_texture(texture)

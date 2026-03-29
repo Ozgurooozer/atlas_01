@@ -478,6 +478,35 @@ FAZ 7: DEMO GAMES ✅ TAMAMLANDI
 
 TOPLAM: 885 tests ✅
 
+FAZ 8: COLLISION DETECTION ✅ TAMAMLANDI
+  8.1  engine/physics/aabb.py    → AABB bounds, contains_point, overlaps
+  8.2  engine/physics/overlap.py → OverlapDetector, callbacks
+  8.3  engine/physics/spatial.py → SpatialHash (broad phase)
+  TOTAL: 20 tests
+
+FAZ 9: TIMER/SCHEDULER ✅ TAMAMLANDI
+  9.1  core/scheduler.py         → call_later, call_every, cancel, tick
+  TOTAL: 33 tests
+
+FAZ 10: QUALITY GATE ✅ TAMAMLANDI
+  CI Gate + Pre-commit + TDD Timer System
+  TOTAL: 98 tests
+
+FAZ 11: ADVANCED RENDERER INTEGRATION ✅ TAMAMLANDI
+  engine/renderer/shader.py, animation.py, light.py, spritesheet.py
+  TOTAL: 44 tests
+
+FAZ 12: 2.5D ISOMETRIC RENDERING ✅ TAMAMLANDI
+  12.1  IsometricProjection + HeightSprite + HeightMap + LayerManager → 27 tests
+  12.2  Normal maps + Soft shadows + 3D-positioned lights             → 25 tests
+  12.3  Multi-directional sprites + Billboard + Rotation smoothing    → 13 tests
+  12.4  3D particles + Volumetric effects + Post-process stack        → 35 tests
+  12.5  SDF fonts + Combat polish + Performance optimization          → 84 tests
+  TOTAL: 184 tests
+
+GENEL TOPLAM: 1569 tests ✅
+```
+
 ---
 
 ## Demo Oyunlar ve Keşfedilen İhtiyaçlar
@@ -494,31 +523,6 @@ Demo oyunlar gerçek ihtiyaçları ortaya çıkardı:
 | Object Pooling | - | - | ✅ | - | YAGNI |
 | Timer/Scheduler | - | - | ✅ | - | ✅ VAR |
 | Undo/Redo | - | - | - | ✅ | Oyun-specific |
-
----
-
-## Gelecek Planları
-
-FAZ 8: COLLISION DETECTION ✅ TAMAMLANDI
-  8.1  engine/physics/           → 20 tests (Collision modülleri)
-       - aabb.py (AABB bounds, contains_point, overlaps)
-       - overlap.py (OverlapDetector, callbacks)
-       - spatial.py (SpatialHash for broad phase)
-  NOT: Collision modülleri physics/ altında (Unreal/Unity standardı)
-  TOTAL: 20 tests
-
-FAZ 9: TIMER/SCHEDULER ✅ TAMAMLANDI
-  9.1  core/scheduler.py          → 33 tests
-       - call_later(delay, callback): Gecikmeli callback
-       - call_every(interval, callback): Tekrarlayan callback
-       - cancel(handle): İptal etme
-       - tick(dt): Game loop entegrasyonu
-  9.2  engine/engine.py           → Entegrasyon
-       - scheduler property
-       - tick() içinde scheduler.tick()
-  TOTAL: 33 tests
-
-TOPLAM: 936 tests ✅
 
 ---
 
@@ -566,7 +570,7 @@ engine/physics/
 | **DataAsset** | Data-driven game verisi (inventory, stats) | Data-driven oyun gerekirse |
 
 **Neden YAGNI?**
-- 4 demo oyun çalışıyor, 936 test geçiyor
+- 1569 test geçiyor, %90 coverage
 - Hiçbir crash, memory leak, performans sorunu yok
 - "İleride lazım olur" düşüncesiyle kod yazmak YASAK (Kural 3.1)
 
@@ -709,88 +713,35 @@ engine/
 
 ---
 
-## FAZ 11: SCRIPTING KATMANI 🔄 GELİŞTİRİLİYOR
+## FAZ 11: ADVANCED RENDERER INTEGRATION ✅ TAMAMLANDI
 
-### Hedef
-
-Oyun mantığı yazma araçları sağlamak:
-- **StateMachine** - Hierarchical State Machine (düşman AI, menü state'leri)
-- **BehaviourTree** - AI decision making (düşman davranışları)
-- **Blackboard** - AI shared state (veri paylaşımı)
-- **EventGraph** - Visual scripting nodes (editör entegrasyonu)
-- **Timeline** - Sequence/Director (kesintisiz sahne)
-
-### Katman Yerleşimi
+Shader, Animation, Light ve Spritesheet sistemlerinin engine'e entegrasyonu.
 
 ```
-Layer 5 (Scripting):
-├── __init__.py
-├── statemachine.py    # Hierarchical State Machine
-├── behaviour_tree.py  # Behaviour Tree (AI)
-├── blackboard.py      # AI shared state
-├── event_graph.py     # Visual scripting nodes
-└── timeline.py        # Timeline/Director
+engine/renderer/
+├── shader.py          # Shader sistemi
+├── animation.py       # Sprite animasyon sistemi
+├── light.py           # 2D lighting sistemi
+└── spritesheet.py     # Spritesheet yönetimi
 ```
 
-### StateMachine Tasarımı
+**Toplam:** 44 test
 
-```python
-class State:
-    """Base state class."""
-    
-    def on_enter(self) -> None: ...
-    def on_exit(self) -> None: ...
-    def tick(self, dt: float) -> None: ...
-    
-class StateMachine:
-    """Hierarchical State Machine."""
-    
-    def __init__(self, initial_state: State):
-        self._current_state = initial_state
-        self._states: dict[str, State] = {}
-    
-    def transition(self, state_name: str) -> None:
-        """Transition to new state."""
-        self._current_state.on_exit()
-        self._current_state = self._states[state_name]
-        self._current_state.on_enter()
-    
-    def tick(self, dt: float) -> None:
-        """Update current state."""
-        self._current_state.tick(dt)
-```
+---
 
-### Blackboard Tasarımı
+## FAZ 12: 2.5D ISOMETRIC RENDERING ✅ TAMAMLANDI
 
-```python
-class Blackboard:
-    """Shared state for AI systems."""
-    
-    def __init__(self):
-        self._data: dict[str, Any] = {}
-        self._listeners: dict[str, list[Callable]] = {}
-    
-    def set(self, key: str, value: Any) -> None:
-        """Set value and notify listeners."""
-        self._data[key] = value
-        self._notify(key, value)
-    
-    def get(self, key: str, default: Any = None) -> Any:
-        """Get value from blackboard."""
-        return self._data.get(key, default)
-```
+Hades seviyesinde 2.5D rendering: isometric projeksiyon, height sistemi, gelişmiş aydınlatma.
 
-### TDD Planı
+| Adım | Açıklama | Test | Durum |
+|------|----------|------|-------|
+| 12.1 | IsometricProjection + HeightSprite + HeightMap + LayerManager | 27 | ✅ |
+| 12.2 | Normal maps + Soft shadows + 3D-positioned lights | 25 | ✅ |
+| 12.3 | Multi-directional sprites + Billboard + Rotation smoothing | 13 | ✅ |
+| 12.4 | 3D particles + Volumetric effects + Post-process stack | 35 | ✅ |
+| 12.5 | SDF fonts + Combat polish + Performance optimization | 84 | ✅ |
 
-| Adım | Dosya | Test Sayısı | Durum |
-|------|-------|-------------|-------|
-| 11.1 | test_statemachine.py + statemachine.py | ~35 | 🔄 BAŞLIYOR |
-| 11.2 | test_blackboard.py + blackboard.py | ~25 | PLANLI |
-| 11.3 | test_behaviour_tree.py + behaviour_tree.py | ~40 | PLANLI |
-| 11.4 | test_event_graph.py + event_graph.py | ~30 | PLANLI |
-| 11.5 | test_timeline.py + timeline.py | ~25 | PLANLI |
-
-**Toplam:** ~155 yeni test
+**Toplam:** 184 test
 
 ---
 
@@ -808,5 +759,6 @@ class Blackboard:
 | FAZ 8: COLLISION | 20 | ✅ TAMAMLANDI |
 | FAZ 9: TIMER/SCHEDULER | 33 | ✅ TAMAMLANDI |
 | FAZ 10: QUALITY GATE | 98 | ✅ TAMAMLANDI |
-| FAZ 11: SCRIPTING | ~155 | 🔄 GELİŞTİRİLİYOR |
-| **TOPLAM** | **~1477** | - |
+| FAZ 11: ADVANCED RENDERER | 44 | ✅ TAMAMLANDI |
+| FAZ 12: 2.5D ISOMETRIC | 184 | ✅ TAMAMLANDI |
+| **TOPLAM** | **1569** | ✅ |

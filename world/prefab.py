@@ -9,6 +9,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from copy import deepcopy
 
+_MISSING = object()  # Sentinel for missing default
+
 
 @dataclass
 class ComponentData:
@@ -55,22 +57,22 @@ class Prefab:
         """
         self.properties[name] = value
     
-    def get_property(self, name: str, default: Any = None) -> Any:
+    def get_property(self, name: str, default: Any = _MISSING) -> Any:
         """Get prefab property.
-        
+
         Args:
             name: Property name
             default: Default value if not found
-            
+
         Returns:
             Property value
-            
+
         Raises:
             KeyError: If property not found and no default given
         """
         if name in self.properties:
             return self.properties[name]
-        if default is not None:
+        if default is not _MISSING:
             return default
         raise KeyError(f"Property '{name}' not found in prefab '{self.name}'")
     

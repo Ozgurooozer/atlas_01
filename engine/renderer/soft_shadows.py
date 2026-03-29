@@ -6,7 +6,7 @@ Layer: 2 (Engine)
 Dependencies: core.vec, engine.renderer.normal_lighting
 """
 from typing import List, Tuple, Optional
-from math import exp, sqrt, pow
+from math import exp, sqrt
 from core.vec import Vec2
 
 

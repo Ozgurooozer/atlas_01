@@ -142,7 +142,10 @@ class Blackboard(Object):
     def _notify_listeners(self, key: str, value: Any) -> None:
         """Notify all listeners of a change."""
         for listener in self._listeners:
-            listener(key, value)
+            try:
+                listener(key, value)
+            except Exception:
+                pass
 
     def get_scope(self, scope: str) -> Dict[str, Any]:
         """
