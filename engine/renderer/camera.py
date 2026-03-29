@@ -53,6 +53,7 @@ class Camera:
         self._bounds: Optional[Tuple[float, float, float, float]] = None
         self._follow_target: Optional[object] = None
         self._follow_speed: float = 0.1
+        self._mode: str = "side_scroll"  # "side_scroll" | "isometric"
 
     @property
     def position(self) -> Vec2:
@@ -138,6 +139,18 @@ class Camera:
     def follow_speed(self, value: float) -> None:
         """Set follow speed."""
         self._follow_speed = max(0.0, min(1.0, value))
+
+    @property
+    def mode(self) -> str:
+        """Get camera mode."""
+        return self._mode
+
+    @mode.setter
+    def mode(self, value: str) -> None:
+        """Set camera mode."""
+        if value not in ("side_scroll", "isometric"):
+            raise ValueError("Invalid camera mode")
+        self._mode = value
 
     def world_to_screen(self, world_x: float, world_y: float) -> Tuple[float, float]:
         """
@@ -247,10 +260,10 @@ class Camera:
     @property
     def view_matrix(self) -> Tuple[float, ...]:
         """
-        Get the view matrix (3x3).
+        Get the view matrix (4x4).
 
         Returns:
-            9 floats representing a 3x3 matrix.
+            16 floats representing a 4x4 matrix.
         """
         import math
 
@@ -267,30 +280,70 @@ class Camera:
         z = self._zoom
 
         # Combine: scale * rotate * translate
-        # 3x3 matrix in column-major order
+        # 4x4 matrix in column-major order
         return (
-            z * cos_r, z * sin_r, 0.0,
-            -z * sin_r, z * cos_r, 0.0,
-            tx * z * cos_r - ty * z * sin_r, tx * z * sin_r + ty * z * cos_r, 1.0
+            z * cos_r, z * sin_r, 0.0, 0.0,
+            -z * sin_r, z * cos_r, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            tx * z * cos_r - ty * z * sin_r, tx * z * sin_r + ty * z * cos_r, 0.0, 1.0
         )
 
     @property
     def projection_matrix(self) -> Tuple[float, ...]:
         """
-        Get the projection matrix (orthographic, 3x3).
+        Get the projection matrix (orthographic, 4x4).
 
         Returns:
-            9 floats representing a 3x3 matrix.
+            16 floats representing a 4x4 matrix.
         """
+        if self._mode == "isometric":
+            return IsometricProjection.get_matrix(self._viewport_width, self._viewport_height, self._zoom)
+
         # Orthographic projection
         # Maps (0, 0) to (-1, -1) and (width, height) to (1, 1)
         w = self._viewport_width
         h = self._viewport_height
 
         return (
-            2.0 / w, 0.0, 0.0,
-            0.0, -2.0 / h, 0.0,
-            -1.0, 1.0, 1.0
+            2.0 / w, 0.0, 0.0, 0.0,
+            0.0, -2.0 / h, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            -1.0, 1.0, 0.0, 1.0
+        )
+
+
+class IsometricProjection:
+    """Helper for isometric projection matrices."""
+
+    @staticmethod
+    def get_matrix(width: int, height: int, zoom: float) -> Tuple[float, ...]:
+        """
+        Get isometric projection matrix (4x4).
+
+        Args:
+            width: Viewport width.
+            height: Viewport height.
+            zoom: Zoom level.
+
+        Returns:
+            16 floats representing a 4x4 matrix.
+        """
+        # Isometric transformation:
+        # x' = (x - y) * cos(30)
+        # y' = (x + y) * sin(30)
+        import math
+        cos30 = math.cos(math.radians(30))
+        sin30 = math.sin(math.radians(30))
+
+        # Scale by zoom and normalize to clip space
+        sx = (2.0 / width) * zoom
+        sy = (2.0 / height) * zoom
+
+        return (
+            cos30 * sx, -sin30 * sy, 0.0, 0.0,
+            -cos30 * sx, -sin30 * sy, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
         )
 
     def look_at(self, x: float, y: float) -> None:

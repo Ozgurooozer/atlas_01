@@ -93,9 +93,24 @@ class IGPUDevice(ABC):
         pass
 
     @abstractmethod
-    def draw(self, texture_id: int, x: float, y: float, width: float | None = None, height: float | None = None) -> None:
+    def draw(
+        self,
+        texture_id: int,
+        x: float,
+        y: float,
+        width: float | None = None,
+        height: float | None = None,
+        rotation: float = 0.0,
+        color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+        flip_x: bool = False,
+        flip_y: bool = False,
+        anchor_x: float = 0.5,
+        anchor_y: float = 0.5,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
         """
-        Draw a texture at specified position.
+        Draw a texture at specified position with transform and color.
 
         Args:
             texture_id: Texture handle from create_texture
@@ -103,7 +118,64 @@ class IGPUDevice(ABC):
             y: Y position in screen coordinates
             width: Optional width (defaults to texture width)
             height: Optional height (defaults to texture height)
+            rotation: Rotation in degrees
+            color: RGBA color (0.0 - 1.0)
+            flip_x: Flip texture horizontally
+            flip_y: Flip texture vertically
+            anchor_x: Horizontal anchor point (0.0 - 1.0)
+            anchor_y: Vertical anchor point (0.0 - 1.0)
+            view_matrix: Optional 4x4 view matrix
+            projection_matrix: Optional 4x4 projection matrix
         """
+        pass
+
+    @abstractmethod
+    def draw_with_normal_map(
+        self,
+        texture_id: int,
+        normal_map_id: int,
+        x: float,
+        y: float,
+        width: float | None = None,
+        height: float | None = None,
+        rotation: float = 0.0,
+        color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+        flip_x: bool = False,
+        flip_y: bool = False,
+        anchor_x: float = 0.5,
+        anchor_y: float = 0.5,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+        lights: list | None = None,
+        ambient: Tuple[float, float, float] = (0.1, 0.1, 0.1),
+    ) -> None:
+        """Draw a quad with normal mapping and point lights."""
+        pass
+
+    @abstractmethod
+    def draw_light(
+        self,
+        x: float,
+        y: float,
+        color: Tuple[float, float, float],
+        intensity: float,
+        radius: float,
+        falloff: float,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
+        """Draw a light pass quad (additive)."""
+        pass
+
+    @abstractmethod
+    def draw_instanced(
+        self,
+        texture_id: int,
+        instance_data: bytes,
+        instance_count: int,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
+        """Draw multiple instances of a quad with per-instance data."""
         pass
 
     @abstractmethod
@@ -119,14 +191,43 @@ class IGPUDevice(ABC):
     @abstractmethod
     def create_framebuffer(self, width: int, height: int) -> "IFramebuffer":
         """
-        Create an off-screen framebuffer.
+        Create a new GPU framebuffer.
 
         Args:
             width: Framebuffer width in pixels
             height: Framebuffer height in pixels
 
         Returns:
-            Framebuffer interface
+            A new IFramebuffer instance
+        """
+        pass
+
+    @abstractmethod
+    def create_mrt_framebuffer(self, width: int, height: int, attachments: int) -> "IFramebuffer":
+        """
+        Create a Multiple Render Target (MRT) framebuffer.
+
+        Args:
+            width: Framebuffer width in pixels
+            height: Framebuffer height in pixels
+            attachments: Number of color attachments
+
+        Returns:
+            A new IFramebuffer instance with multiple color targets
+        """
+        pass
+
+    @abstractmethod
+    def create_depth_framebuffer(self, width: int, height: int) -> "IFramebuffer":
+        """
+        Create a depth-only framebuffer.
+
+        Args:
+            width: Framebuffer width in pixels
+            height: Framebuffer height in pixels
+
+        Returns:
+            A new IFramebuffer instance with only a depth target
         """
         pass
 
@@ -168,6 +269,12 @@ class IFramebuffer(ABC):
     @abstractmethod
     def height(self) -> int:
         """Framebuffer height."""
+        pass
+
+    @property
+    @abstractmethod
+    def is_bound(self) -> bool:
+        """Check if framebuffer is currently bound."""
         pass
 
 

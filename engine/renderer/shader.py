@@ -185,6 +185,269 @@ void main() {
 }
 """.strip()
 
+NORMAL_MAP_VERTEX_SRC = """
+#version 330 core
+in vec2 a_position;
+in vec2 a_texcoord;
+in vec4 a_color;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+
+out vec2 v_texcoord;
+out vec4 v_color;
+out vec2 v_world_pos;
+
+void main() {
+    vec4 world_pos = vec4(a_position, 0.0, 1.0);
+    gl_Position = u_projection * u_view * world_pos;
+    v_texcoord = a_texcoord;
+    v_color = a_color;
+    v_world_pos = a_position;
+}
+""".strip()
+
+NORMAL_MAP_FRAGMENT_SRC = """
+#version 330 core
+in vec2 v_texcoord;
+in vec4 v_color;
+in vec2 v_world_pos;
+
+uniform sampler2D u_texture;
+uniform sampler2D u_normal_map;
+uniform vec3 u_ambient;
+
+struct Light {
+    vec2 position;
+    vec3 color;
+    float intensity;
+    float radius;
+    float falloff;
+};
+
+uniform Light u_lights[8];
+uniform int u_light_count;
+
+out vec4 frag_color;
+
+void main() {
+    vec4 tex_color = texture(u_texture, v_texcoord) * v_color;
+    if (tex_color.a < 0.01) discard;
+
+    vec3 normal = texture(u_normal_map, v_texcoord).rgb * 2.0 - 1.0;
+    normal = normalize(normal);
+
+    vec3 total_light = u_ambient;
+
+    for (int i = 0; i < u_light_count; i++) {
+        vec2 light_dir_2d = u_lights[i].position - v_world_pos;
+        float dist = length(light_dir_2d);
+        
+        if (dist < u_lights[i].radius) {
+            vec3 light_dir = normalize(vec3(light_dir_2d, 0.5));
+            float diff = max(dot(normal, light_dir), 0.0);
+            
+            float attenuation = pow(clamp(1.0 - dist / u_lights[i].radius, 0.0, 1.0), u_lights[i].falloff);
+            total_light += u_lights[i].color * u_lights[i].intensity * diff * attenuation;
+        }
+    }
+
+    frag_color = vec4(tex_color.rgb * total_light, tex_color.a);
+}
+""".strip()
+
+SHADOW_MAP_VERTEX_SRC = """
+#version 330 core
+in vec2 a_position;
+uniform mat4 u_view;
+uniform mat4 u_projection;
+void main() {
+    gl_Position = u_projection * u_view * vec4(a_position, 0.0, 1.0);
+}
+""".strip()
+
+SHADOW_MAP_FRAGMENT_SRC = """
+#version 330 core
+out float f_depth;
+void main() {
+    f_depth = gl_FragCoord.z;
+}
+""".strip()
+
+PCF_SHADOW_FRAGMENT_SRC = """
+#version 330 core
+uniform sampler2D u_shadow_map;
+uniform vec2 u_light_pos;
+uniform float u_light_radius;
+in vec2 v_world_pos;
+out float f_shadow;
+
+void main() {
+    vec2 texel_size = 1.0 / textureSize(u_shadow_map, 0);
+    float shadow = 0.0;
+    float current_depth = length(v_world_pos - u_light_pos) / u_light_radius;
+    
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            float pcf_depth = texture(u_shadow_map, (gl_FragCoord.xy + vec2(x, y)) * texel_size).r;
+            shadow += current_depth > pcf_depth ? 1.0 : 0.0;
+        }
+    }
+    f_shadow = shadow / 9.0;
+}
+""".strip()
+
+PENUMBRA_BLUR_FRAGMENT_SRC = """
+#version 330 core
+uniform sampler2D u_image;
+uniform float u_blur_radius;
+uniform vec2 u_texel_size;
+out vec4 f_color;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy * u_texel_size;
+    vec4 result = vec4(0.0);
+    float weight[5] = float[](0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+    result += texture(u_image, uv) * weight[0];
+    for(int i = 1; i < 5; ++i) {
+        result += texture(u_image, uv + vec2(u_texel_size.x * i * u_blur_radius, 0.0)) * weight[i];
+        result += texture(u_image, uv - vec2(u_texel_size.x * i * u_blur_radius, 0.0)) * weight[i];
+        result += texture(u_image, uv + vec2(0.0, u_texel_size.y * i * u_blur_radius)) * weight[i];
+        result += texture(u_image, uv - vec2(0.0, u_texel_size.y * i * u_blur_radius)) * weight[i];
+    }
+    f_color = result;
+}
+""".strip()
+
+GBUFFER_VERTEX_SRC = """
+#version 330 core
+in vec2 a_position;
+in vec2 a_texcoord;
+in vec4 a_color;
+uniform mat4 u_view;
+uniform mat4 u_projection;
+out vec2 v_texcoord;
+out vec4 v_color;
+out vec3 v_normal;
+void main() {
+    gl_Position = u_projection * u_view * vec4(a_position, 0.0, 1.0);
+    v_texcoord = a_texcoord;
+    v_color = a_color;
+    v_normal = vec3(0.0, 0.0, 1.0); // Default normal for 2D
+}
+""".strip()
+
+GBUFFER_FRAGMENT_SRC = """
+#version 330 core
+in vec2 v_texcoord;
+in vec4 v_color;
+in vec3 v_normal;
+uniform sampler2D u_texture;
+uniform sampler2D u_normal_map;
+uniform bool u_has_normal_map;
+layout (location = 0) out vec4 f_albedo;
+layout (location = 1) out vec3 f_normal;
+void main() {
+    vec4 tex_color = texture(u_texture, v_texcoord) * v_color;
+    if (tex_color.a < 0.01) discard;
+    f_albedo = tex_color;
+    if (u_has_normal_map) {
+        f_normal = texture(u_normal_map, v_texcoord).rgb * 2.0 - 1.0;
+    } else {
+        f_normal = v_normal;
+    }
+}
+""".strip()
+
+SSAO_FRAGMENT_SRC = """
+#version 330 core
+uniform sampler2D u_normal;
+uniform sampler2D u_depth;
+uniform sampler2D u_noise;
+uniform vec3 u_samples[64];
+uniform float u_radius;
+uniform float u_bias;
+uniform vec2 u_noise_scale;
+uniform mat4 u_projection;
+out float f_ssao;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / textureSize(u_depth, 0);
+    float depth = texture(u_depth, uv).r;
+    vec3 normal = normalize(texture(u_normal, uv).rgb);
+    vec3 random_vec = normalize(texture(u_noise, uv * u_noise_scale).xyz);
+    
+    vec3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
+    vec3 bitangent = cross(normal, tangent);
+    mat3 tbn = mat3(tangent, bitangent, normal);
+    
+    float occlusion = 0.0;
+    for(int i = 0; i < 64; ++i) {
+        vec3 sample_pos = tbn * u_samples[i];
+        sample_pos = vec3(uv, depth) + sample_pos * u_radius;
+        
+        float sample_depth = texture(u_depth, sample_pos.xy).r;
+        float range_check = smoothstep(0.0, 1.0, u_radius / abs(depth - sample_depth));
+        occlusion += (sample_depth >= sample_pos.z + u_bias ? 1.0 : 0.0) * range_check;
+    }
+    f_ssao = 1.0 - (occlusion / 64.0);
+}
+""".strip()
+
+SSAO_BLUR_FRAGMENT_SRC = """
+#version 330 core
+uniform sampler2D u_ssao;
+out float f_blur;
+void main() {
+    vec2 texel_size = 1.0 / textureSize(u_ssao, 0);
+    float result = 0.0;
+    for (int x = -2; x < 2; ++x) {
+        for (int y = -2; y < 2; ++y) {
+            result += texture(u_ssao, (gl_FragCoord.xy + vec2(x, y)) * texel_size).r;
+        }
+    }
+    f_blur = result / 16.0;
+}
+""".strip()
+
+DEFERRED_LIGHT_FRAGMENT_SRC = """
+#version 330 core
+uniform sampler2D u_albedo;
+uniform sampler2D u_normal;
+uniform sampler2D u_depth;
+
+uniform vec2 u_light_pos;
+uniform vec3 u_light_color;
+uniform float u_light_intensity;
+uniform float u_light_radius;
+uniform float u_light_falloff;
+
+out vec4 f_color;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / textureSize(u_albedo, 0);
+    vec4 albedo = texture(u_albedo, uv);
+    if (albedo.a < 0.01) discard;
+    
+    vec3 normal = normalize(texture(u_normal, uv).rgb);
+    float depth = texture(u_depth, uv).r;
+    
+    vec2 world_pos = gl_FragCoord.xy; // Simplified for 2D
+    vec2 light_dir_2d = u_light_pos - world_pos;
+    float dist = length(light_dir_2d);
+    
+    if (dist < u_light_radius) {
+        vec3 light_dir = normalize(vec3(light_dir_2d, 0.5));
+        float diff = max(dot(normal, light_dir), 0.0);
+        float attenuation = pow(clamp(1.0 - dist / u_light_radius, 0.0, 1.0), u_light_falloff);
+        vec3 light = u_light_color * u_light_intensity * diff * attenuation;
+        f_color = vec4(albedo.rgb * light, 0.0); // Alpha 0 for additive blending
+    } else {
+        discard;
+    }
+}
+""".strip()
+
 
 # ---------------------------------------------------------------------------
 # Shader

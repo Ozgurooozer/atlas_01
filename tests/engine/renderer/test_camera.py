@@ -275,8 +275,8 @@ class TestCameraMatrix:
 
         matrix = camera.view_matrix
 
-        # Matrix should be a list/tuple of 9 floats (3x3)
-        assert len(matrix) == 9
+        # Matrix should be a list/tuple of 9 floats (3x3) or 16 floats (4x4)
+        assert len(matrix) == 9 or len(matrix) == 16
 
     def test_camera_projection_matrix(self):
         """Camera should generate projection matrix."""

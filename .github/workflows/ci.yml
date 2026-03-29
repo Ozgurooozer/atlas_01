@@ -117,3 +117,36 @@ jobs:
           echo "Coverage: >90%"
           echo "Demo games: OK"
           echo "============================================"
+
+  # ================================
+  # RENDER SMOKE GATE
+  # Renderer + HAL testleri ayrı job — PR merge bloklayıcı
+  # ================================
+  render-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Render Smoke Tests
+        run: |
+          pytest tests/engine/renderer/ tests/hal/test_moderngl_device.py \
+            -v --tb=short -x
+        # -x: ilk hata anında dur — hızlı gate
+
+      - name: Render Smoke Gate Passed
+        run: echo "Render smoke gate: PASS"

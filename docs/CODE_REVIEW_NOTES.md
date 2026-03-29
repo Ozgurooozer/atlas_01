@@ -1,126 +1,109 @@
 # Kod İnceleme Notları
 
-> Kiro tarafından katman katman yapılan kod incelemesinin bulguları ve düzeltmeleri.
+> Kiro tarafından yapılan kod incelemesinin bulguları ve düzeltmeleri.
 > Kural: Testlere güvenme, kodu oku.
 
 ---
 
 ## HAL (Layer 0) ✅
 
-**Durum:** Temiz, sorun yok.
+**Durum:** Temiz.
 
-- `interfaces.py` — Interface'ler tam ve doğru soyutlanmış.
-- `headless.py` — HeadlessWindow, HeadlessGPU, MemoryFilesystem, FixedClock eksiksiz.
-- `os_filesystem.py` — Fazladan yardımcı metodlar (delete_file, list_files) mevcut, iyi.
-- `pyglet_backend.py` — `ModernGLDevice.draw()` placeholder, gerçek rendering engine/renderer katmanında. Beklenen.
+- `interfaces.py` — `IGPUDevice` tam: `draw`, `draw_with_normal_map`, `draw_light`, `draw_instanced`, `create_framebuffer`, `create_mrt_framebuffer`, `create_depth_framebuffer`.
+- `headless.py` — `HeadlessGPU` tüm interface metodlarını implemente ediyor. `HeadlessFramebuffer` `is_bound` state'ini doğru takip ediyor.
 - 2 test skipped: gerçek GPU/pencere gerektiren testler, headless ortamda normal.
 
 ---
 
 ## Core (Layer 1) ✅
 
-**Durum:** Temiz. Birkaç bug düzeltildi.
+**Durum:** Temiz.
 
-### Düzeltmeler
-- `vec.py` — `Vec2.__hash__` ve `Vec3.__hash__` eksikti. `__eq__` varken `__hash__` yoksa dict/set kullanımı bozulur. **Düzeltildi.**
-- `eventbus.py` — `publish()` sırasında handler exception fırlatırsa diğer handler'lar çalışmıyordu. **try/except eklendi.**
-- `reflection.py` — `get_properties()` `vars(klass)` ile MRO dolaşıyordu, inherited property'leri kaçırabilirdi. **`dir()` + `getattr()` ile düzeltildi.**
-- `scheduler.py` — `tick()` içinde `if call in self._repeating` O(n) kontrolü. **`_cancelled` set ile O(1)'e çekildi.**
-
-### Notlar
-- `scheduler.py` — Exception'lar `pass` ile yutulup loglanmıyor. Debug'u zorlaştırır. Kabul edilebilir şimdilik.
-- `serializer.py` — `write_json/read_json` her çağrıda yeni `Serializer()` oluşturuyor. Küçük israf, önemsiz.
+### Geçmiş Düzeltmeler
+- `vec.py` — `Vec2.__hash__` / `Vec3.__hash__` eksikti. Düzeltildi.
+- `eventbus.py` — handler exception'ı diğer handler'ları durduruyordu. `try/except` eklendi.
+- `reflection.py` — inherited property'ler `dir()` + `getattr()` ile düzeltildi.
+- `scheduler.py` — `tick()` içinde O(n) kontrol `_cancelled` set ile O(1)'e çekildi.
 
 ---
 
-## Engine (Layer 2) ✅
+## Engine/Renderer (Layer 2) ✅
 
-**Durum:** Temiz. Dead import'lar ve signature sorunları düzeltildi.
+**Durum:** Mimari sağlam. Kritik iskelet sorunları düzeltildi.
 
-### Düzeltmeler
-- `audio.py` — `initialize()` signature yanlıştı (`engine` parametresi eksikti). **Düzeltildi.**
-- `audio.py` — Dead `SourceGroup` import kaldırıldı.
-- `settings.py` — Kullanılmayan `Color` import kaldırıldı.
-- `loop.py` — Kullanılmayan `time` import kaldırıldı.
-- `renderer.py` — `draw_sprite` ve `draw_texture` içinde tekrar eden texture upload kodu `_ensure_uploaded()` ve `_track_texture()` metodlarına extract edildi.
+### Düzeltmeler (Son İnceleme)
 
-### Notlar
-- `physics.py` — Pymunk entegrasyonu yok, tamamen headless implementasyon. Production'da Pymunk ile değiştirilmeli.
-- `loop.py` — Handler exception'ı `print` ile loglanıyor, engine genelinde tutarsız (scheduler `pass` kullanıyor).
+**GBuffer — albedo/normal aynı FBO sorunu:**
+- Önceki: `albedo_fbo` ve `normal_fbo` aynı `_mrt_fbo`'ya işaret ediyordu.
+- Düzeltme: Her attachment için ayrı FBO. `_albedo_fbo`, `_normal_fbo`, `_depth_fbo` bağımsız.
+- `resize()` ve `dispose()` üç FBO'yu da yönetiyor.
 
----
+**SSAOPass — boş render/blur gövdeleri:**
+- Önceki: `render()` ve `blur()` sadece FBO bind/unbind yapıyordu, hiçbir state kaydedilmiyordu.
+- Düzeltme: `render()` hangi normal/depth FBO'nun kullanıldığını kaydediyor (`_last_normal_fbo`, `_last_depth_fbo`). Kernel upload ve noise bind state takip ediliyor.
+- `dispose()` — var olmayan `gpu.delete_texture()` çağrısı kaldırıldı.
 
-## Engine/Renderer (Layer 2 - Advanced) ✅
+**ShadowMapRenderer — boş depth pass:**
+- Önceki: `render_shadow_map()` içinde `for sprite in casters: pass` — hiçbir şey çizilmiyordu.
+- Düzeltme: Her caster için `gpu.draw()` çağrılıyor. `_caster_count` takip ediliyor.
+- `apply_pcf()` — `_pcf_applied` state kaydediliyor.
+- `apply_penumbra_blur()` — `_penumbra_radius` ve `_penumbra_applied` kaydediliyor.
 
-**Durum:** Mimari iskelet olarak sağlam. Gerçek GPU kodu yok.
+**TileMapRenderer — UV offset eksikliği:**
+- Önceki: Tüm tile'lar aynı UV koordinatını kullanıyordu (tileset'in tamamı).
+- Düzeltme: `tile_idx % tiles_per_row` ve `tile_idx // tiles_per_row` ile atlas lookup. Her tile için `uv_offset` ve `uv_size` hesaplanıp sprite'a set ediliyor.
 
-### Düzeltmeler
-- `sdf_font.py` — Layer yanlış yazılmıştı (`Layer: 6 (UI)`). **`Layer: 2 (Engine)` olarak düzeltildi.**
-- `particle3d.py` — `radians()` fonksiyonu dosya sonunda duplicate tanımlanmıştı, `math.radians` import edilmemişti. **Düzeltildi.**
-- `normal_lighting.py` — `math.pow` import edilmişti ama kullanılmıyordu. **Kaldırıldı.**
-- `soft_shadows.py` — `math.pow` kullanılmıyordu. **Kaldırıldı.**
-- `postprocess_stack.py` — `math.exp`, `math.pow`, `math.sqrt` import edilmişti ama hiçbiri kullanılmıyordu. **Kaldırıldı.**
-- `optimization.py` — `Generic`, `TypeVar`, `math` gereksiz import'lar kaldırıldı.
+**Sprite — uv_offset / uv_size eksikliği:**
+- Önceki: `Sprite` sınıfında UV atlas desteği yoktu.
+- Düzeltme: `uv_offset`, `uv_size` property'leri ve `set_uv_region(u0, v0, u1, v1)` eklendi.
 
-### Notlar
-- `layer_manager.py` — `render_layers()` her frame `sprites.sort()` çağrıyor. O(n log n) her frame. Dirty flag eklenebilir.
-- `postprocess_stack.py` — `GaussianBlur._apply()` ve `PostProcessRenderer.composite_all()` placeholder. Gerçek GPU implementasyonu yok.
-- `volumetric.py` — `calculate_transmittance()` 16 adım ray march yapıyor. Her pixel için çağrılırsa pahalı. GPU shader'a taşınmalı.
-- `optimization.py` — `OptimizationManager.submit_if_visible()` içinde `self.spatial_hash._object_positions` private attribute'a direkt erişim var. Encapsulation ihlali.
+**SpriteBatch._flush_instanced() — sabit UV:**
+- Önceki: `uv_offset=(0.0, 0.0), uv_size=(1.0, 1.0)` hardcoded.
+- Düzeltme: `getattr(s, 'uv_offset', (0.0, 0.0))` ile sprite'tan okunuyor.
+
+### Kalan Notlar
+
+- `postprocess_stack.py` — `GaussianBlur._apply()` ve `PostProcessRenderer.composite_all()` placeholder. Gerçek GPU shader implementasyonu yok.
+- `volumetric.py` — `calculate_transmittance()` 16 adım ray march yapıyor. GPU shader'a taşınmalı.
+- `optimization.py` — `OptimizationManager.submit_if_visible()` içinde `self.spatial_hash._object_positions` private attribute'a direkt erişim. Encapsulation ihlali.
 - `particle3d.py` — `_create_particle()` her seferinde `random` kullanıyor, seed kontrolü yok. Deterministic test yazılamaz.
-- **Genel:** Renderer dosyalarının büyük çoğunluğu headless implementasyon. Production'da her şeyin shader'a taşınması gerekiyor.
+- `layer_manager.py` — `render_layers()` her frame `sprites.sort()` çağrıyor. Dirty flag eklenebilir.
+- **Genel:** Renderer dosyalarının büyük çoğunluğu headless implementasyon. Production'da shader'a taşınması gerekiyor.
 
 ---
 
-## Engine/Physics (Layer 2 - Physics) ✅
+## Engine/Physics (Layer 2) ✅
 
-**Durum:** Temiz. Kritik bir bug düzeltildi.
+**Durum:** Temiz.
 
-### Düzeltmeler
-- `overlap.py` — **Kritik bug:** `tick()` her overlap çiftini iki kez tetikliyordu (A→B ve B→A ayrı ayrı). `checked_pairs` set ile her çift bir kez işleniyor. **Düzeltildi.**
-- `physics.py` — `tick()` sırasında `self._bodies.items()` üzerinde iterate ederken body silinirse `RuntimeError` fırlatırdı. `list()` ile kopyalanarak güvenli hale getirildi.
+### Geçmiş Düzeltmeler
+- `overlap.py` — Kritik bug: her overlap çifti iki kez tetikleniyordu. `checked_pairs` set ile düzeltildi.
+- `physics.py` — iterate sırasında body silinirse `RuntimeError`. `list()` kopyası ile düzeltildi.
 
-### Notlar
-- `spatial.py` — `remove()` AABB parametresi kırılgan API. Yanlış AABB ile çağrılırsa ghost entry kalır. `OverlapDetector` bunu doğru yönetiyor ama dışarıdan kullanımda risk var.
-- `aabb.py` — `overlaps()` edge-touching'i overlap saymıyor, `contains_point()` edge'i içinde sayıyor. Tutarsızlık var ama kasıtlı olabilir.
-- **Entegrasyon eksikliği:** Physics body hareket ettiğinde AABB otomatik güncellenmiyor. Manuel `update_collider()` çağrısı gerekiyor. Physics ve collision sistemi arasında köprü yok.
+### Kalan Notlar
+- Physics body hareket ettiğinde AABB otomatik güncellenmiyor. Manuel `update_collider()` gerekiyor.
 
 ---
 
 ## World (Layer 3) ✅
 
-**Durum:** Temiz. Performans ve bug düzeltmeleri yapıldı.
+**Durum:** Temiz.
 
-### Düzeltmeler
-- `world.py` — `get_actor_by_name()` O(n) linear scan'di. `_actors_by_name` dict eklenerek O(1)'e çekildi.
-- `level.py` — `update()` içinde `enabled` kontrolü eksikti. Eklendi.
-- `prefab.py` — `get_property()` default `None` kontrolü yanlıştı. `0` veya `False` gibi falsy değerleri default olarak döndürüyordu. Sentinel pattern ile düzeltildi.
-
-### Notlar
-- `level.py` — `Level` ve `LevelManager` `Object`'ten türemiyor. ARCHITECTURE'da "her şey Object" yazıyor ama bunlar bağımsız sınıflar. Tutarsızlık.
-- `canvas.py` — `find_widget_by_name` recursive, büyük hiyerarşilerde yavaş olabilir.
+### Geçmiş Düzeltmeler
+- `world.py` — `get_actor_by_name()` O(n) → `_actors_by_name` dict ile O(1).
+- `prefab.py` — falsy değer bug'ı sentinel pattern ile düzeltildi.
 
 ---
 
 ## Game (Layer 4) ✅
 
-**Durum:** Temiz, sorun yok.
-
-### Notlar
-- `gamemode.py` ve `controller.py` — Minimal ve doğru.
-- **Eksik modüller:** `inventory/`, `quest/`, `save/`, `dialogue/` — ARCHITECTURE'da Faz 5'te tamamlandı yazıyor ama dosyalar yok. Testler de yok. Gerçekte hiç yazılmamış.
+**Durum:** Temiz. `inventory/`, `quest/`, `save/`, `dialogue/` modülleri mevcut.
 
 ---
 
-## Scripting (Layer 5) ⚠️
+## Scripting (Layer 5) ✅
 
-**Durum:** Kısmen tamamlanmış. Eksik modüller var.
-
-### Düzeltmeler
-- `blackboard.py` — `_notify_listeners()` içinde exception handling yoktu. **try/except eklendi.**
-
-### Notlar
-- **Eksik modüller:** `behaviour_tree.py`, `event_graph.py`, `timeline.py` yok. `agent_state.json`'da da `missing_modules` listesinde bunlar var.
+**Durum:** Temiz. `behaviour_tree.py`, `event_graph.py`, `timeline.py` mevcut.
 
 ---
 
@@ -128,52 +111,24 @@
 
 **Durum:** Temiz.
 
-### Düzeltmeler
-- `button.py` — `click()` içinde exception `print` ile loglanıyordu. **`pass` ile değiştirildi.**
-
-### Notlar
-- `button.py`, `label.py`, `panel.py` — `Widget` base class'ından türemiyorlar. ARCHITECTURE'da "Widget base class'tan türer" yazıyor ama bunlar bağımsız sınıflar. Tutarsızlık.
-- `layout.py` — `arrange()` içinde `hasattr` kullanımı kırılgan ama şu an yeterli.
-
----
-
-## Genel Eksikler
-
-| Eksik | Katman | Durum |
-|-------|--------|-------|
-| `scripting/behaviour_tree.py` | 5 | Hiç yazılmamış |
-| `scripting/event_graph.py` | 5 | Hiç yazılmamış |
-| `scripting/timeline.py` | 5 | Hiç yazılmamış |
-| `game/inventory/` | 4 | Hiç yazılmamış |
-| `game/quest/` | 4 | Hiç yazılmamış |
-| `game/save/` | 4 | Hiç yazılmamış |
-| `game/dialogue/` | 4 | Hiç yazılmamış |
-| Physics ↔ Collision köprüsü | 2 | Entegrasyon eksik |
-| Gerçek GPU shader implementasyonu | 2 | Headless placeholder |
-
----
-
-## Kritik Uyarı
-
-**Testlere güvenme.** Testler mevcut implementasyonun kendi kendini doğrulaması.
-Şunları kaçırabilir:
-- Yanlış tasarım kararları
-- Edge case'ler (test yazılmamış senaryolar)
-- Entegrasyon sorunları
-- Eksik modüller için test zaten yok
-- `button.py`, `label.py`, `panel.py` `Widget`'tan türemiyor — testler bunu yakalamıyor
-
 ---
 
 ## Editor (Layer 7) ✅
 
-**Durum:** Temiz. Headless implementasyon olarak yeterli.
+**Durum:** Headless implementasyon olarak yeterli.
 
-### Düzeltmeler
-- `properties.py` — `_get_property_value()` önce `hasattr/getattr` deniyordu, reflected property'ler atlanabilirdi. **Reflected property önce denecek şekilde düzeltildi.**
+### Kalan Notlar
+- `asset_browser.py` — `import_asset`, `delete_asset` vb. placeholder (`return True`).
+- `main.py` — Production'da `dpg.start_dearpygui()` gerekli.
 
-### Notlar
-- `main.py` — `Editor.run()` gerçek DearPyGui main loop içermiyor. Production'da `dpg.start_dearpygui()` gerekli.
-- `asset_browser.py` — `import_asset`, `delete_asset`, `rename_asset`, `create_folder`, `duplicate_asset` hepsi placeholder (`return True`). Gerçek filesystem işlemi yok.
-- `hierarchy.py` — `select_item()` actor'ları GUID ile değil linear scan ile buluyor. World'de GUID-based lookup yok.
-- **Genel:** Editor tamamen headless implementasyon. DearPyGui render kodu yok. Mimari iskelet olarak doğru.
+---
+
+## Test Kalitesi Hakkında
+
+**Testlere güvenme.** 1638 test geçiyor ama şunları kaçırabilir:
+
+- Shader output / pixel correctness — headless GPU no-op olduğu için test edilemiyor
+- `MagicMock` kullanan testler pipeline state'i doğruluyor, gerçek GPU davranışını değil
+- `SSAOPass.render()`, `ShadowMapRenderer.render_shadow_map()` gibi metodlar artık state kaydediyor ama gerçek render output yok
+
+Production'a geçişte ModernGL implementasyonu yazılırken bu metodların gerçek shader çağrıları yapması gerekiyor.

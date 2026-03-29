@@ -15,10 +15,13 @@ Dependencies: core.object, world.actor
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING
 
 from core.object import Object
 from world.actor import Actor
+
+if TYPE_CHECKING:
+    from world.components.engine_context import EngineContext
 
 
 class World(Object):
@@ -52,6 +55,7 @@ class World(Object):
         self._actors: List[Actor] = []
         self._actors_by_name: Dict[str, Actor] = {}  # O(1) name lookup
         self._enabled: bool = True
+        self._engine_context: Optional[EngineContext] = None
 
     @property
     def actors(self) -> List[Actor]:
@@ -73,6 +77,10 @@ class World(Object):
         """Get the number of actors in this World."""
         return len(self._actors)
 
+    def set_engine_context(self, context: Optional[EngineContext]) -> None:
+        """Set the engine context for dependency injection."""
+        self._engine_context = context
+
     def spawn_actor(self, actor: Actor) -> None:
         """
         Spawn an Actor into this World.
@@ -90,6 +98,12 @@ class World(Object):
         self._actors.append(actor)
         self._actors_by_name[actor.name] = actor
         actor.world = self
+        
+        # Inject engine context into all components
+        if self._engine_context:
+            for component in actor.components:
+                self._engine_context.inject(component)
+                
         actor.on_created()
 
     def destroy_actor(self, actor: Actor) -> None:

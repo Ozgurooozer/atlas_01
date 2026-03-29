@@ -11,6 +11,14 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 
+def test_default_sprite_vertex_uses_u_position_translation():
+    """Default sprite shader should translate vertices with u_position."""
+    from hal.pyglet_backend import DEFAULT_SPRITE_VERTEX_SRC
+
+    assert "uniform vec2 u_position;" in DEFAULT_SPRITE_VERTEX_SRC
+    assert "vec2 world_pos = rotated + u_position;" in DEFAULT_SPRITE_VERTEX_SRC
+
+
 class TestShaderCompileError:
     """Tests for ShaderCompileError on invalid GLSL."""
 

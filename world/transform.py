@@ -16,7 +16,7 @@ Dependencies: world.component, core.reflection
 """
 
 from __future__ import annotations
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 from world.component import Component
 from core.reflection import reflect
@@ -55,6 +55,7 @@ class TransformComponent(Component):
         self._rotation: float = 0.0
         self._scale_x: float = 1.0
         self._scale_y: float = 1.0
+        self._parent: Optional[TransformComponent] = None
 
     # Position properties
     @property
@@ -130,6 +131,55 @@ class TransformComponent(Component):
     def scale_y(self, value: float) -> None:
         """Set Y scale."""
         self._scale_y = float(value)
+
+    # Parent-Child hierarchy
+    @property
+    def parent(self) -> Optional[TransformComponent]:
+        """Get parent transform."""
+        return self._parent
+
+    @parent.setter
+    def parent(self, value: Optional[TransformComponent]) -> None:
+        """Set parent transform."""
+        self._parent = value
+
+    @property
+    def world_position(self) -> Tuple[float, float]:
+        """Get world position (recursive)."""
+        if self._parent is None:
+            return self.position
+        
+        import math
+        px, py = self._parent.world_position
+        pr = math.radians(self._parent.world_rotation)
+        psx, psy = self._parent.world_scale
+        
+        # Apply parent scale and rotation to local position
+        lx = self._x * psx
+        ly = self._y * psy
+        
+        cos_r = math.cos(pr)
+        sin_r = math.sin(pr)
+        
+        rx = lx * cos_r - ly * sin_r
+        ry = lx * sin_r + ly * cos_r
+        
+        return (px + rx, py + ry)
+
+    @property
+    def world_rotation(self) -> float:
+        """Get world rotation (recursive)."""
+        if self._parent is None:
+            return self._rotation
+        return self._parent.world_rotation + self._rotation
+
+    @property
+    def world_scale(self) -> Tuple[float, float]:
+        """Get world scale (recursive)."""
+        if self._parent is None:
+            return self.scale
+        psx, psy = self._parent.world_scale
+        return (psx * self._scale_x, psy * self._scale_y)
 
     # Helper methods
     def set_uniform_scale(self, value: float) -> None:

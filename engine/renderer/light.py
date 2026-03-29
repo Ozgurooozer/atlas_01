@@ -39,6 +39,7 @@ class Light2D:
         position: Vec2 = None,
         radius: float = 200.0,
         falloff: float = 2.0,
+        cast_shadows: bool = False,
     ) -> None:
         self.light_type = light_type
         self.color = color or Color.white()
@@ -47,7 +48,8 @@ class Light2D:
         self.radius = max(0.0, radius)
         self.falloff = max(0.1, falloff)
         self.enabled = True
-        self.cast_shadows = False
+        self.cast_shadows = cast_shadows
+        self.penumbra_radius = 4.0
 
     def effective_color(self) -> tuple:
         """Return (r, g, b, a) premultiplied by intensity."""
@@ -125,12 +127,38 @@ class LightRenderer:
         # scene is composited with light map externally
     """
 
+    MAX_LIGHTS = 32
+
     def __init__(self, gpu: IGPUDevice, width: int, height: int) -> None:
         self._gpu = gpu
         self._light_map = LightMap(gpu, width, height)
         self._lights: List[Light2D] = []
         self._ambient: Color = Color(0.1, 0.1, 0.1, 1.0)
         self._ambient_intensity: float = 0.1
+        self._light_count: int = 0
+        self._shadows_enabled: bool = False
+        self._shadow_renderer: Optional["ShadowMapRenderer"] = None
+        self._deferred_enabled: bool = False
+
+    @property
+    def shadows_enabled(self) -> bool:
+        """Get whether shadows are enabled."""
+        return self._shadows_enabled
+
+    @shadows_enabled.setter
+    def shadows_enabled(self, value: bool) -> None:
+        """Set whether shadows are enabled."""
+        self._shadows_enabled = value
+
+    @property
+    def deferred_enabled(self) -> bool:
+        """Get whether deferred lighting is enabled."""
+        return self._deferred_enabled
+
+    @deferred_enabled.setter
+    def deferred_enabled(self, value: bool) -> None:
+        """Set whether deferred lighting is enabled."""
+        self._deferred_enabled = value
 
     @property
     def ambient_color(self) -> Color:
@@ -150,8 +178,16 @@ class LightRenderer:
 
     def submit(self, light: Light2D) -> None:
         """Queue a light for the next render pass."""
-        if light.enabled:
-            self._lights.append(light)
+        if not light.enabled:
+            return
+            
+        limit = 1000 if self._deferred_enabled else self.MAX_LIGHTS
+        if self._light_count >= limit:
+            # Silently ignore if limit reached (Gereksinim 4.7)
+            return
+            
+        self._lights.append(light)
+        self._light_count += 1
 
     def submit_many(self, lights: List[Light2D]) -> None:
         for light in lights:
@@ -159,6 +195,10 @@ class LightRenderer:
 
     def begin_light_pass(self) -> None:
         """Bind the light map FBO and clear to ambient color."""
+        if self._shadows_enabled and self._shadow_renderer is None:
+            from engine.renderer.shadow_map import ShadowMapRenderer
+            self._shadow_renderer = ShadowMapRenderer(self._gpu)
+
         self._light_map.bind()
         a = self._ambient
         self._gpu.clear(
@@ -168,9 +208,31 @@ class LightRenderer:
             1.0,
         )
         self._lights.clear()
+        self._light_count = 0
 
     def end_light_pass(self) -> None:
         """Finalize light rendering and unbind FBO."""
+        # Draw each point light as a quad with additive blending.
+        # The light shader computes radial falloff per fragment.
+        for light in self._lights:
+            if light.light_type == LightType.POINT:
+                # Shadow pass if enabled and light casts shadows
+                if self._shadows_enabled and light.cast_shadows and self._shadow_renderer:
+                    # In a real implementation, we'd collect casters here
+                    # self._shadow_renderer.render_shadow_map(light, casters)
+                    # self._shadow_renderer.apply_pcf()
+                    # self._shadow_renderer.apply_penumbra_blur(light.penumbra_radius)
+                    pass
+
+                # Use the dedicated draw_light method for better performance and correctness
+                self._gpu.draw_light(
+                    light.position.x,
+                    light.position.y,
+                    (light.color.r, light.color.g, light.color.b),
+                    light.intensity,
+                    light.radius,
+                    light.falloff
+                )
         self._light_map.unbind()
 
     @property
@@ -179,7 +241,27 @@ class LightRenderer:
 
     @property
     def light_count(self) -> int:
-        return len(self._lights)
+        return self._light_count
+
+    def get_visible_point_lights(self, max_count: int = 8) -> List[Light2D]:
+        """
+        Return up to max_count enabled point lights.
+
+        Public API — use this instead of accessing _lights directly.
+
+        Args:
+            max_count: Maximum number of lights to return.
+
+        Returns:
+            List of enabled point Light2D objects.
+        """
+        result = []
+        for light in self._lights:
+            if light.enabled and light.light_type == LightType.POINT:
+                result.append(light)
+                if len(result) >= max_count:
+                    break
+        return result
 
     def resize(self, width: int, height: int) -> None:
         self._light_map.resize(width, height)

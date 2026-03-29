@@ -12,6 +12,14 @@ from engine.renderer.texture import Texture, TextureLoader
 from engine.renderer.sprite import Sprite
 from engine.renderer.batch import SpriteBatch
 from engine.renderer.camera import Camera
+from engine.renderer.material import Material
+from engine.renderer.postprocess_stack import (
+    PostProcessStack,
+    BloomPass,
+    ColorGradingPass,
+    VignettePass,
+    FXAAPass,
+)
 
 __all__ = [
     "IRenderer",
@@ -21,4 +29,10 @@ __all__ = [
     "Sprite",
     "SpriteBatch",
     "Camera",
+    "Material",
+    "PostProcessStack",
+    "BloomPass",
+    "ColorGradingPass",
+    "VignettePass",
+    "FXAAPass",
 ]

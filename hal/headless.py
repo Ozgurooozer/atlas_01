@@ -88,8 +88,69 @@ class HeadlessGPU(IGPUDevice):
         """No-op in headless mode."""
         pass
 
-    def draw(self, texture_id: int, x: float, y: float, width: float | None = None, height: float | None = None) -> None:
-        """No-op in headless mode (would validate texture_id in strict mode)."""
+    def draw(
+        self,
+        texture_id: int,
+        x: float,
+        y: float,
+        width: float | None = None,
+        height: float | None = None,
+        rotation: float = 0.0,
+        color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+        flip_x: bool = False,
+        flip_y: bool = False,
+        anchor_x: float = 0.5,
+        anchor_y: float = 0.5,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
+        """No-op in headless mode."""
+        pass
+
+    def draw_with_normal_map(
+        self,
+        texture_id: int,
+        normal_map_id: int,
+        x: float,
+        y: float,
+        width: float | None = None,
+        height: float | None = None,
+        rotation: float = 0.0,
+        color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+        flip_x: bool = False,
+        flip_y: bool = False,
+        anchor_x: float = 0.5,
+        anchor_y: float = 0.5,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+        lights: list | None = None,
+        ambient: Tuple[float, float, float] = (0.1, 0.1, 0.1),
+    ) -> None:
+        """No-op in headless mode."""
+        pass
+
+    def draw_light(
+        self,
+        x: float,
+        y: float,
+        color: Tuple[float, float, float],
+        intensity: float,
+        radius: float,
+        falloff: float,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
+        """No-op in headless mode."""
+        pass
+
+    def draw_instanced(
+        self,
+        texture_id: int,
+        instance_data: bytes,
+        instance_count: int,
+        view_matrix: Tuple[float, ...] | None = None,
+        projection_matrix: Tuple[float, ...] | None = None,
+    ) -> None:
+        """No-op in headless mode."""
         pass
 
     def flush(self) -> None:
@@ -98,6 +159,14 @@ class HeadlessGPU(IGPUDevice):
 
     def create_framebuffer(self, width: int, height: int) -> IFramebuffer:
         """Create headless framebuffer."""
+        return HeadlessFramebuffer(width, height)
+
+    def create_mrt_framebuffer(self, width: int, height: int, attachments: int) -> IFramebuffer:
+        """Create headless MRT framebuffer."""
+        return HeadlessFramebuffer(width, height)
+
+    def create_depth_framebuffer(self, width: int, height: int) -> IFramebuffer:
+        """Create headless depth framebuffer."""
         return HeadlessFramebuffer(width, height)
 
 
@@ -129,6 +198,10 @@ class HeadlessFramebuffer(IFramebuffer):
     @property
     def height(self) -> int:
         return self._height
+
+    @property
+    def is_bound(self) -> bool:
+        return self._bound
 
 
 class MemoryFilesystem(IFilesystem):

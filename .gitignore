@@ -37,6 +37,7 @@ ENV/
 .coverage
 htmlcov/
 .tox/
+.hypothesis/
 
 # Type checking / Linting cache
 .mypy_cache/

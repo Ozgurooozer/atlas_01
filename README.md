@@ -1,19 +1,23 @@
-# 🔥 2D Game Engine
+# 2D Game Engine
 
-Unreal Engine felsefesiyle 2D oyun motoru - Python'da modüler, test edilebilir, genişletilebilir.
+Unreal Engine felsefesiyle 2D oyun motoru — Python'da modüler, test edilebilir, genişletilebilir.
 
-## 🎯 Özellikler
+## Özellikler
 
-- **Her şey Object** - Actor, Component, Widget hepsi Object'ten türetilir
-- **Reflection sistemi** - Editor otomatik çalışır, ek kod gerektirmez
-- **Subsystem pattern** - Modüler genişleme, yeni subsystem eklemek kolay
-- **Test-driven** - 1340 test, %100 coverage hedefi
-- **Headless testing** - CI'da GPU olmadan çalışır
-- **Sprite rendering** - Texture yükleme, sprite çizme, batch rendering
-- **Camera sistemi** - Zoom, rotation, bounds, follow target
-- **Advanced Renderer** - Shader, Animation, Light, Spritesheet
+- **Her şey Object** — Actor, Component, Widget hepsi Object'ten türetilir
+- **Reflection sistemi** — Editor otomatik çalışır, ek kod gerektirmez
+- **Subsystem pattern** — Modüler genişleme, yeni subsystem eklemek kolay
+- **1638 test, 0 fail** — Headless GPU ile CI'da çalışır
+- **GPU Instancing** — SpriteBatch, tek draw call ile N sprite
+- **Normal Map Lighting** — Lambertian + Blinn-Phong, max 8 point light per sprite
+- **Deferred / Forward mutex** — Renderer2D'de runtime geçiş koruması
+- **SSAO** — 64-sample hemisphere kernel, 4x4 noise texture, box blur
+- **Soft Shadows** — Depth pass + PCF + Gaussian penumbra
+- **TileMap** — Frustum culling + UV atlas lookup
+- **Particle System** — Ring buffer pool, SpriteBatch entegrasyonu
+- **2.5D Isometric** — IsometricProjection, HeightSprite, LayerManager
 
-## 📦 Bağımlılıklar
+## Bağımlılıklar
 
 | Paket | Amaç |
 |-------|------|
@@ -25,117 +29,112 @@ Unreal Engine felsefesiyle 2D oyun motoru - Python'da modüler, test edilebilir,
 | watchdog >= 4.0 | Hot reload |
 | dearpygui >= 1.13 | Editor UI |
 
-## 🚀 Kurulum
+## Kurulum
 
 ```bash
-# Bağımlılıkları yükle
 pip install -r requirements.txt
-
-# Testleri çalıştır
 pytest tests/ -v
 ```
 
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
-engine/
-├── hal/                    # Layer 0: Hardware Abstraction
-│   ├── interfaces.py       # IWindow, IGPUDevice, IFilesystem, IClock
-│   ├── headless.py         # Test implementations
-│   ├── pyglet_backend.py   # Real window/GPU
-│   └── os_filesystem.py    # Real filesystem
-│
-├── core/                   # Layer 1: Foundation
-│   ├── guid.py             # Unique identifiers
-│   ├── object.py           # Base class for everything
-│   ├── reflection.py       # @reflect decorator
-│   ├── eventbus.py         # Pub/sub system
-│   ├── signal.py           # Signal/Slot
-│   ├── config.py           # Config system
-│   ├── logger.py           # Logging
-│   ├── vec.py              # Vec2, Vec3
-│   ├── scheduler.py        # Delayed callbacks
-│   └── profiler.py         # Performance profiling
-│
-├── engine/                 # Layer 2: Subsystems
-│   ├── engine.py           # Engine class
-│   ├── subsystem.py        # ISubsystem interface
-│   ├── renderer/           # 2D Rendering
-│   │   ├── renderer.py     # Renderer2D
-│   │   ├── texture.py      # Texture + TextureLoader
-│   │   ├── sprite.py       # Sprite class
-│   │   ├── batch.py        # SpriteBatch
-│   │   └── camera.py       # Camera system
-│   ├── physics/            # 2D Physics (Pymunk)
-│   ├── input/              # Input handling
-│   └── asset/              # Asset management
-│
-├── world/                  # Layer 3: Actor/Component
-│   ├── world.py            # World container
-│   ├── actor.py            # Actor class
-│   ├── component.py        # Component base
-│   ├── transform.py        # TransformComponent
-│   ├── level.py            # Level management
-│   └── prefab.py           # Prefab system
-│
-├── game/                   # Layer 4: Game logic
-│   ├── gamemode.py         # GameMode base
-│   ├── controller.py       # Controllers
-│   ├── inventory/          # Inventory system
-│   ├── quest/              # Quest system
-│   └── dialogue/           # Dialogue system
-│
-├── scripting/              # Layer 5: AI/Scripting
-│   ├── statemachine.py     # Hierarchical State Machine
-│   └── behaviour_tree.py   # Behaviour Tree
-│
-├── ui/                     # Layer 6: Widgets
-│   ├── widget.py           # Widget base
-│   ├── canvas.py           # Canvas container
-│   ├── label.py            # Label widget
-│   ├── button.py           # Button widget
-│   └── panel.py            # Panel widget
-│
-└── editor/                 # Layer 7: Editor
-    ├── main.py             # Editor application
-    ├── viewport.py         # Scene viewport
-    ├── hierarchy.py        # Hierarchy panel
-    ├── properties.py       # Properties panel
-    └── asset_browser.py    # Asset browser
+hal/                        # Layer 0: Hardware Abstraction
+├── interfaces.py           # IWindow, IGPUDevice, IFilesystem, IClock, IFramebuffer
+├── headless.py             # HeadlessGPU, HeadlessFramebuffer, MemoryFilesystem
+├── pyglet_backend.py       # PygletWindow, ModernGLDevice
+└── os_filesystem.py
+
+core/                       # Layer 1: Foundation
+├── object.py, guid.py, reflection.py
+├── eventbus.py, serializer.py
+├── vec.py, color.py, scheduler.py
+
+engine/                     # Layer 2: Subsystems
+├── renderer/
+│   ├── renderer.py         # Renderer2D (deferred/forward mutex, SSAO pipeline)
+│   ├── sprite.py           # Sprite (uv_offset, uv_size, normal_map)
+│   ├── batch.py            # SpriteBatch (instanced + legacy)
+│   ├── instance_data.py    # InstanceData (17 float GPU struct)
+│   ├── gbuffer.py          # GBuffer (albedo/normal/depth FBO)
+│   ├── ssao.py             # SSAOPass (64 kernel, noise, blur)
+│   ├── shadow_map.py       # ShadowMapRenderer (depth, PCF, penumbra)
+│   ├── soft_shadows.py     # ShadowCaster, ShadowMap, SoftShadowKernel
+│   ├── normal_lighting.py  # NormalMapShader, Light3D, LightManager
+│   ├── light.py            # Light2D, LightRenderer, LightMap
+│   ├── tilemap.py          # TileMapRenderer (frustum culling, UV atlas)
+│   ├── particle.py         # ParticleEmitter (ring buffer)
+│   ├── texture.py, camera.py, material.py
+│   ├── animation.py, spritesheet.py, shader.py
+│   ├── isometric.py, height_sprite.py, layer_manager.py
+│   ├── directional_sprite.py, sdf_font.py
+│   ├── postprocess_stack.py, volumetric.py, optimization.py
+│   └── particle3d.py
+├── physics/                # AABB, OverlapDetector, SpatialHash
+├── input/, audio/, asset/
+
+world/                      # Layer 3: Actor/Component/ECS
+game/                       # Layer 4: Inventory, Quest, Save, Dialogue
+scripting/                  # Layer 5: StateMachine, BehaviourTree, EventGraph
+ui/                         # Layer 6: Widget, Canvas, Layout, Theme
+editor/                     # Layer 7: Viewport, Hierarchy, Properties
 ```
 
-## 🧪 Test
+## Hızlı Kullanım
+
+```python
+from hal.headless import HeadlessGPU
+from engine.renderer.renderer import Renderer2D
+from engine.renderer.sprite import Sprite
+from engine.renderer.texture import Texture
+from engine.renderer.batch import SpriteBatch
+
+gpu = HeadlessGPU()
+renderer = Renderer2D()
+renderer.gpu_device = gpu
+
+# Normal map sprite
+sprite = Sprite(texture)
+sprite.normal_map = normal_texture  # otomatik draw_with_normal_map kullanır
+
+# GPU instancing
+batch = SpriteBatch(renderer, instancing_enabled=True)
+with batch:
+    for s in sprites:
+        batch.draw(s)  # tek draw_instanced() çağrısı
+
+# SSAO
+renderer.ssao_enabled = True
+renderer.begin_frame()
+# ... çizim ...
+renderer.end_frame()
+
+# Tilemap
+tilemap = TileMapRenderer(tileset, tile_size=32)
+tilemap.set_tiles(width, height, tile_indices)
+tilemap.draw(batch, camera_pos, viewport_size)
+```
+
+## Test
 
 ```bash
-# Tüm testleri çalıştır
 pytest tests/ -v
-
-# Coverage ile
 pytest tests/ --cov=. --cov-report=html
 ```
 
-## 📖 Dokümantasyon
+## Durum
 
-- [AGENT_RULES.md](AGENT_RULES.md) - Geliştirme kuralları
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Mimari tasarım
-- [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) - AI development prosedürü
+| Faz | Açıklama | Test |
+|-----|----------|------|
+| 1-12 | Foundation → 2.5D Isometric | 1569 |
+| 13 | GPU Instancing + Normal Map + Advanced Lighting | 69 |
+| **Toplam** | | **1638** ✅ |
 
-## 📊 Durum
+## Dokümantasyon
 
-**FAZ 1: Foundation** ✅ TAMAMLANDI
-**FAZ 2: Engine Skeleton** ✅ TAMAMLANDI
-**FAZ 3: World/ECS** ✅ TAMAMLANDI
-**FAZ 4: Subsystems** ✅ TAMAMLANDI
-- Renderer2D (draw_sprite, draw_texture)
-- Texture (from_file, from_bytes, save)
-- SpriteBatch (z-sorting, texture batching)
-- Camera (zoom, rotation, bounds, follow)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Mimari tasarım ve sistem detayları
+- [docs/CODE_REVIEW_NOTES.md](docs/CODE_REVIEW_NOTES.md) — Kod inceleme bulguları
 
-**FAZ 5: Game & UI** ✅ TAMAMLANDI
-**FAZ 6: Editor** ✅ TAMAMLANDI
-
-**Toplam: 770 test geçiyor** ✅
-
-## 📜 Lisans
+## Lisans
 
 MIT

@@ -94,6 +94,11 @@ class Actor(Object):
         """
         self._components.append(component)
         component.owner = self
+        
+        # Inject engine context if world is available
+        if self._world and hasattr(self._world, "_engine_context") and self._world._engine_context:
+            self._world._engine_context.inject(component)
+            
         component.on_attach(self)
 
     def remove_component(self, component: Component) -> None:

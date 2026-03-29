@@ -326,6 +326,22 @@ class Texture(Object):
         )
 
     @classmethod
+    def placeholder(cls, width: int = 32, height: int = 32) -> "Texture":
+        """
+        Magenta placeholder texture — eksik asset durumunda kullanılır.
+
+        Sessiz hata yerine görsel sinyal: magenta (255, 0, 255) renk.
+
+        Args:
+            width: Placeholder genişliği.
+            height: Placeholder yüksekliği.
+
+        Returns:
+            Magenta dolu Texture.
+        """
+        return cls.from_color(width, height, (255, 0, 255, 255))
+
+    @classmethod
     def from_data(
         cls,
         width: int,

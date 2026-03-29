@@ -18,6 +18,7 @@ from core.vec import Vec2
 
 if TYPE_CHECKING:
     from engine.renderer.texture import Texture
+    from engine.renderer.material import Material
 
 
 class Sprite(Object):
@@ -93,6 +94,14 @@ class Sprite(Object):
         # Flip flags
         self._flip_x: bool = False
         self._flip_y: bool = False
+
+        # Material and Normal Map
+        self._material: Optional["Material"] = None
+        self._normal_map: Optional[int] = None
+
+        # UV region for texture atlases / tilemaps
+        self._uv_offset: Tuple[float, float] = (0.0, 0.0)
+        self._uv_size: Tuple[float, float] = (1.0, 1.0)
 
     @property
     def texture(self) -> Optional[Texture]:
@@ -237,6 +246,59 @@ class Sprite(Object):
     def flip_y(self, value: bool) -> None:
         """Set Y flip."""
         self._flip_y = value
+
+    @property
+    def material(self) -> Optional["Material"]:
+        """Get material."""
+        return self._material
+
+    @material.setter
+    def material(self, value: Optional["Material"]) -> None:
+        """Set material."""
+        self._material = value
+
+    @property
+    def normal_map(self) -> Optional[int]:
+        """Get normal map texture ID."""
+        return self._normal_map
+
+    @normal_map.setter
+    def normal_map(self, value: Optional[int]) -> None:
+        """Set normal map texture ID."""
+        self._normal_map = value
+
+    @property
+    def uv_offset(self) -> Tuple[float, float]:
+        """Get UV offset (normalized 0-1) for texture atlas sampling."""
+        return self._uv_offset
+
+    @uv_offset.setter
+    def uv_offset(self, value: Tuple[float, float]) -> None:
+        """Set UV offset."""
+        self._uv_offset = value
+
+    @property
+    def uv_size(self) -> Tuple[float, float]:
+        """Get UV size (normalized 0-1) for texture atlas sampling."""
+        return self._uv_size
+
+    @uv_size.setter
+    def uv_size(self, value: Tuple[float, float]) -> None:
+        """Set UV size."""
+        self._uv_size = value
+
+    def set_uv_region(self, u0: float, v0: float, u1: float, v1: float) -> None:
+        """
+        Set UV region directly from normalized coordinates.
+        
+        Args:
+            u0: Left U (0-1)
+            v0: Top V (0-1)
+            u1: Right U (0-1)
+            v1: Bottom V (0-1)
+        """
+        self._uv_offset = (u0, v0)
+        self._uv_size = (u1 - u0, v1 - v0)
 
     @property
     def width(self) -> float:
