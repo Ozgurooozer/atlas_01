@@ -1,16 +1,17 @@
 """
-Serializer - JSON Serialization System.
+Serializer - msgspec Serialization System.
 
-Provides serialization for Object instances using reflection.
+Provides fast serialization using msgspec instead of stdlib json.
 Works with reflected properties to automatically serialize/deserialize.
 
 Layer: 1 (Core)
-Dependencies: core.reflection, core.object
+Dependencies: core.reflection, core.object, msgspec
 """
 
 from __future__ import annotations
-import json
 from typing import Any, Dict, TYPE_CHECKING
+
+import msgspec
 
 if TYPE_CHECKING:
     from core.object import Object
@@ -19,13 +20,20 @@ if TYPE_CHECKING:
 
 class Serializer:
     """
-    JSON serializer with support for Object serialization.
+    msgspec serializer with support for Object serialization.
 
     Can serialize:
     - Basic types (str, int, float, bool, None)
     - Lists and dicts
     - Object instances with reflected properties
+    
+    Uses msgspec for fast JSON encoding/decoding.
     """
+    
+    def __init__(self):
+        """Initialize serializer with msgspec encoder/decoder."""
+        self._encoder = msgspec.json.Encoder()
+        self._decoder = msgspec.json.Decoder()
 
     def serialize(self, data: Any) -> str:
         """
@@ -37,7 +45,7 @@ class Serializer:
         Returns:
             JSON string
         """
-        return json.dumps(data, indent=2, ensure_ascii=False)
+        return self._encoder.encode(data).decode("utf-8")
 
     def deserialize(self, json_str: str) -> Any:
         """
@@ -49,7 +57,7 @@ class Serializer:
         Returns:
             Deserialized data
         """
-        return json.loads(json_str)
+        return self._decoder.decode(json_str)
 
 
 def serialize_object(obj: "Object") -> Dict[str, Any]:

@@ -110,24 +110,3 @@ class EventBus:
             True if event has handlers
         """
         return event_name in self._handlers and len(self._handlers[event_name]) > 0
-
-
-# Global singleton instance
-_event_bus: Optional[EventBus] = None
-
-
-def get_event_bus() -> EventBus:
-    """
-    Get the global EventBus instance.
-
-    Returns:
-        Global EventBus singleton
-    """
-    global _event_bus
-    if _event_bus is None:
-        _event_bus = EventBus()
-    return _event_bus
-
-
-# Module-level singleton for convenience
-event_bus = get_event_bus()

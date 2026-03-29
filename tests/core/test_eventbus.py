@@ -12,22 +12,41 @@ class TestEventBusCreation:
     """Test EventBus creation."""
 
     def test_eventbus_creation(self):
-        """EventBus should be creatable."""
+        """EventBus should be creatable without singleton."""
         from core.eventbus import EventBus
         bus = EventBus()
         assert bus is not None
 
-    def test_eventbus_singleton(self):
-        """EventBus should be accessible as singleton."""
-        from core.eventbus import event_bus
-        assert event_bus is not None
+    def test_eventbus_isolation(self):
+        """Multiple EventBus instances should be independent."""
+        from core.eventbus import EventBus
+        bus1 = EventBus()
+        bus2 = EventBus()
+        
+        calls = []
+        bus1.subscribe("test", lambda d: calls.append("bus1"))
+        bus2.publish("test", {})
+        
+        assert len(calls) == 0  # bus1 not triggered by bus2
+        
+        bus1.publish("test", {})
+        assert len(calls) == 1  # bus1 triggered
 
-    def test_eventbus_singleton_same_instance(self):
-        """EventBus singleton should return same instance."""
-        from core.eventbus import event_bus, get_event_bus
-        bus1 = event_bus
-        bus2 = get_event_bus()
-        assert bus1 is bus2
+    def test_dependency_injection(self):
+        """EventBus should be injectable via constructor."""
+        from core.eventbus import EventBus
+        
+        class Component:
+            def __init__(self, event_bus: EventBus):
+                self._bus = event_bus
+                self.received = []
+                self._bus.subscribe("event", lambda d: self.received.append(d))
+        
+        bus = EventBus()
+        comp = Component(bus)
+        bus.publish("event", {"data": 123})
+        
+        assert comp.received == [{"data": 123}]
 
 
 class TestEventBusSubscribe:
