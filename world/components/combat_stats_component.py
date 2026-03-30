@@ -7,6 +7,7 @@ Layer: 3 (World/Components)
 Dependencies: core.object
 """
 from __future__ import annotations
+import random
 from typing import Any, Dict
 from world.component import Component
 
@@ -154,7 +155,6 @@ class CombatStatsComponent(Component):
         Returns:
             True if the roll is a critical hit.
         """
-        import random
         return random.random() < self.crit_chance
 
     def serialize(self) -> Dict[str, Any]:

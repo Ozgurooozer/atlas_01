@@ -132,7 +132,7 @@ class TestCombatSystem:
         health.take_damage(200.0)
         dd = DamageData(amount=10.0)
         result = cs.apply_damage(dd, health)
-        assert result.was_dodged is True
+        assert result.was_dodged is False  # Not dodged, already dead
 
     def test_apply_heal(self):
         from world.components.health_component import HealthComponent

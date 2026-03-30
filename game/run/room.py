@@ -143,7 +143,7 @@ class RoomGraph(Object):
                 rtype = RoomType.START
             elif i == room_count - 1:
                 rtype = RoomType.BOSS
-            elif i == room_count - 3:
+            elif room_count >= 4 and i == room_count - 3:
                 rtype = RoomType.REWARD
             elif i % 4 == 2:
                 rtype = rng.choice([RoomType.SHOP, RoomType.REST, RoomType.TREASURE])

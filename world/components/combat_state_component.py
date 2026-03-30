@@ -36,6 +36,7 @@ class CombatStateComponent(Component):
         self.knockback_decay: float = 5.0
         # Cooldowns dict: action_name -> remaining_time
         self._cooldowns: Dict[str, float] = {}
+        self._cooldown_durations: Dict[str, float] = {}
         # Status effects: effect_name -> remaining_duration
         self._status_effects: Dict[str, float] = {}
         self._max_status_stacks: Dict[str, int] = {}
@@ -49,6 +50,7 @@ class CombatStateComponent(Component):
             duration: Cooldown duration in seconds.
         """
         self._cooldowns[action] = duration
+        self._cooldown_durations[action] = duration
 
     def is_on_cooldown(self, action: str) -> bool:
         """
@@ -74,9 +76,13 @@ class CombatStateComponent(Component):
         """
         if action not in self._cooldowns:
             return 0.0
-        if self._cooldowns[action] <= 0:
+        remaining = self._cooldowns[action]
+        if remaining <= 0:
             return 0.0
-        return 1.0
+        original = self._cooldown_durations.get(action, remaining)
+        if original <= 0:
+            return 0.0
+        return remaining / original
 
     def apply_stun(self, duration: float) -> None:
         """

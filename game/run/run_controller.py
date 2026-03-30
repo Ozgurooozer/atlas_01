@@ -111,7 +111,7 @@ class RunController(Object):
                 return
 
             # Check for rewards
-            if room.room_type == RoomType.REWARD or room._rewards:
+            if room.room_type == RoomType.REWARD or room.rewards:
                 self._pending_rewards = list(room.rewards)
                 self._set_phase(RunPhase.REWARD)
                 return

@@ -713,9 +713,8 @@ class EnemyAI(Object):
         hitbox = self._actor.get_component(HitboxComponent)
         if hitbox is not None:
             hitbox.activate()
-            # Brief activation – in a real game the combat system
-            # processes the overlap; we deactivate after the window
-            hitbox.deactivate()
+            # Hitbox stays active for combat system to process overlap.
+            # Will be deactivated when exiting ATTACK state via _do_transition.
 
         # Fire projectile for ranged archetypes
         if isinstance(self._archetype, RangedKiterArchetype) and self._archetype.projectile_speed > 0:
@@ -741,6 +740,12 @@ class EnemyAI(Object):
         if self._sm.is_in_state(state_name):
             return True  # Already there
         if state_name in self._sm.states:
+            # Deactivate hitbox when leaving ATTACK state
+            if self._sm.current_state == "ATTACK" and self._actor:
+                from world.components.hitbox_component import HitboxComponent
+                hitbox = self._actor.get_component(HitboxComponent)
+                if hitbox is not None:
+                    hitbox.deactivate()
             self._sm.transition(state_name)
             return True
         return False

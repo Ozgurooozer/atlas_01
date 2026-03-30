@@ -11,6 +11,8 @@ from __future__ import annotations
 from typing import Optional, Dict, List, TYPE_CHECKING
 from core.object import Object
 from core.eventbus import EventBus
+from core.vec import Vec2
+from world.transform import TransformComponent
 
 from game.combat.model import (
     DamageData, DamageType, CombatResult, CombatEventType, StatusEffectType
@@ -49,11 +51,11 @@ class CombatSystem(Object):
 
     def start_combat(self) -> None:
         self._is_active = True
-        self._event_bus.publish(CombatEventType.COMBAT_START, {})
+        self._event_bus.publish(CombatEventType.COMBAT_START.value, {})
 
     def end_combat(self) -> None:
         self._is_active = False
-        self._event_bus.publish(CombatEventType.COMBAT_END, {})
+        self._event_bus.publish(CombatEventType.COMBAT_END.value, {})
 
     def calculate_damage(
         self,
@@ -63,8 +65,8 @@ class CombatSystem(Object):
         is_crit: bool = False,
     ) -> CombatResult:
         """Calculate damage with defense reduction and crit."""
-        if attacker_stats and is_crit:
-            raw_damage = attacker_stats.calculate_damage(is_crit=True)
+        if attacker_stats:
+            raw_damage = attacker_stats.calculate_damage(is_crit=is_crit)
 
         defense = 0.0
         if defender_stats:
@@ -88,7 +90,7 @@ class CombatSystem(Object):
     ) -> CombatResult:
         """Apply damage to a target."""
         if target_health.is_dead:
-            return CombatResult(was_dodged=True)
+            return CombatResult()  # Target already dead, no effect
 
         if target_state and target_state.is_stunned:
             pass  # Stunned targets can't dodge, proceed with damage
@@ -107,7 +109,7 @@ class CombatSystem(Object):
             result.overkill = max(0.0, actual - hp_before)
 
         # Publish events
-        self._event_bus.publish(CombatEventType.DAMAGE_RECEIVED, {
+        self._event_bus.publish(CombatEventType.DAMAGE_RECEIVED.value, {
             "target": damage_data.target,
             "amount": actual,
             "is_crit": damage_data.is_crit,
@@ -116,7 +118,7 @@ class CombatSystem(Object):
         })
 
         if damage_data.source:
-            self._event_bus.publish(CombatEventType.DAMAGE_DEALT, {
+            self._event_bus.publish(CombatEventType.DAMAGE_DEALT.value, {
                 "source": damage_data.source,
                 "amount": actual,
                 "is_crit": damage_data.is_crit,
@@ -124,7 +126,7 @@ class CombatSystem(Object):
             })
 
         if damage_data.is_crit:
-            self._event_bus.publish(CombatEventType.CRITICAL_HIT, {
+            self._event_bus.publish(CombatEventType.CRITICAL_HIT.value, {
                 "source": damage_data.source,
                 "target": damage_data.target,
                 "amount": actual,
@@ -132,7 +134,7 @@ class CombatSystem(Object):
             })
 
         if result.target_died:
-            self._event_bus.publish(CombatEventType.DEATH, {
+            self._event_bus.publish(CombatEventType.DEATH.value, {
                 "target": damage_data.target,
                 "killer": damage_data.source,
             })
@@ -150,7 +152,7 @@ class CombatSystem(Object):
                 damage_data.status_effect.name,
                 damage_data.status_duration,
             )
-            self._event_bus.publish(CombatEventType.STATUS_APPLIED, {
+            self._event_bus.publish(CombatEventType.STATUS_APPLIED.value, {
                 "target": damage_data.target,
                 "effect": damage_data.status_effect,
                 "duration": damage_data.status_duration,
@@ -165,8 +167,8 @@ class CombatSystem(Object):
         source: Optional[Actor] = None,
     ) -> float:
         actual = target_health.heal(amount)
-        self._event_bus.publish(CombatEventType.HEAL, {
-            "target": None,  # target_health.owner
+        self._event_bus.publish(CombatEventType.HEAL.value, {
+            "target": getattr(target_health, 'owner', None),
             "amount": actual,
             "source": source,
         })
@@ -215,16 +217,13 @@ class CombatSystem(Object):
             is_crit=is_crit,
             source=attacker,
             target=target,
-            knockback=__import__('core.vec', fromlist=['Vec2']).Vec2(
-                hitbox.knockback, 0
-            ),
+            knockback=Vec2(hitbox.knockback, 0.0),
         )
 
         # Get position from attacker transform
-        from world.components.transform_component import TransformComponent
         transform = attacker.get_component(TransformComponent)
         if transform:
-            damage_data.position = transform.position
+            damage_data.position = Vec2(transform.x, transform.y)
 
         result = self.calculate_damage(
             damage_data.amount, attacker_stats,

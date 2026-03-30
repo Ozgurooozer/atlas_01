@@ -22,7 +22,6 @@ class Unlockable(Object):
     ):
         super().__init__(name=name or unlock_id)
         self.unlock_id: str = unlock_id
-        self.name: str = name
         self.cost: int = cost
         self._is_unlocked: bool = False
         self._on_unlock_callbacks: List[Callable] = []
