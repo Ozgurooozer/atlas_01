@@ -37,6 +37,9 @@ class Room(Object):
         self.seed: int = seed
         self.is_cleared: bool = False
         self.is_visited: bool = False
+        self.template_name: str = ""
+        self.template_width: int = 0
+        self.template_height: int = 0
         self._enemies: list = []
         self._rewards: list = []
         self._next_rooms: List[Room] = []
@@ -92,6 +95,9 @@ class Room(Object):
             "seed": self.seed,
             "is_cleared": self.is_cleared,
             "is_visited": self.is_visited,
+            "template_name": self.template_name,
+            "template_width": self.template_width,
+            "template_height": self.template_height,
         })
         return data
 
@@ -102,6 +108,9 @@ class Room(Object):
         self.seed = data.get("seed", 0)
         self.is_cleared = data.get("is_cleared", False)
         self.is_visited = data.get("is_visited", False)
+        self.template_name = data.get("template_name", "")
+        self.template_width = data.get("template_width", 0)
+        self.template_height = data.get("template_height", 0)
 
 
 class RoomGraph(Object):
@@ -159,6 +168,36 @@ class RoomGraph(Object):
 
         return self
 
+    def generate_game_rng(self, room_count: int = 10) -> RoomGraph:
+        """Generate room graph using GameRNG (no global random)."""
+        from game.run.game_rng import GameRNG
+        rng = GameRNG(seed=self.seed)
+        non_combat = [RoomType.SHOP, RoomType.REST, RoomType.TREASURE]
+
+        self.rooms.clear()
+        self._current_index = -1
+
+        for i in range(room_count):
+            if i == 0:
+                rtype = RoomType.START
+            elif i == room_count - 1:
+                rtype = RoomType.BOSS
+            elif room_count >= 4 and i == room_count - 3:
+                rtype = RoomType.REWARD
+            elif i % 4 == 2:
+                rtype = rng.choice(non_combat)
+            else:
+                rtype = RoomType.COMBAT
+
+            room_seed = GameRNG.room_seed(self.seed, i)
+            room = Room(room_type=rtype, room_id=i, seed=room_seed)
+            self.rooms.append(room)
+
+        for i in range(len(self.rooms) - 1):
+            self.rooms[i].add_next_room(self.rooms[i + 1])
+
+        return self
+
     def advance(self) -> Optional[Room]:
         """Advance to next room. Returns the new room or None if finished."""
         if self.is_finished:
@@ -183,3 +222,13 @@ class RoomGraph(Object):
             "rooms": [r.serialize() for r in self.rooms],
         })
         return data
+
+    def deserialize(self, data: Dict[str, Any]) -> None:
+        super().deserialize(data)
+        self.seed = data.get("seed", 0)
+        self._current_index = data.get("current_index", -1)
+        self.rooms.clear()
+        for room_data in data.get("rooms", []):
+            room = Room()
+            room.deserialize(room_data)
+            self.rooms.append(room)

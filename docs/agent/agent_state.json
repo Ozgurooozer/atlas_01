@@ -1,169 +1,57 @@
 {
   "project": {
-    "name": "2D Game Engine",
-    "version": "0.0.1",
-    "language": "Python 3.11+",
-    "created": "2026-03-27"
+    "name": "Atlas 2D Game Engine - Roguelike Vertical Slice",
+    "version": "1.0.0",
+    "language": "Python 3.12+",
+    "created": "2026-03-27",
+    "vertical_slice_start": "2026-03-30"
   },
 
-  "current_phase": 12,
-  "current_step": "12.1",
+  "current_phase": "VS",
+  "current_week": 4,
+  "current_task": "W4-01",
 
-  "phases": {
-    "1": {
-      "name": "FOUNDATION",
-      "description": "HAL interfaces + Core object system",
-      "status": "completed",
-      "test_count": 117
-    },
-    "2": {
-      "name": "ENGINE SKELETON",
-      "description": "Subsystem pattern + Engine class + Real backends",
-      "status": "completed",
-      "test_count": 90
-    },
-    "3": {
-      "name": "WORLD",
-      "description": "Actor + Component + World",
-      "status": "completed",
-      "test_count": 215
-    },
+  "vertical_slice": {
+    "plan": "docs/MASTER_PLAN.md",
+    "rules": "docs/VERTICAL_SLICE_RULES.md",
+    "tracker": "download/atlas_01_task_tracker.xlsx",
+    "base_test_count": 1942,
+    "target_test_count": 2874
+  },
+
+  "weeks": {
+    "1": { "name": "Combat Core v1", "status": "completed", "test_count": 100 },
+    "2": { "name": "Combat Core v1 (devam)", "status": "completed", "test_count": 80 },
+    "3": { "name": "AI Paketleri", "status": "completed", "test_count": 94 },
     "4": {
-      "name": "SUBSYSTEMS",
-      "description": "Renderer + Physics + Input + Asset",
-      "status": "completed",
-      "test_count": 320
-    },
-    "5": {
-      "name": "GAME & UI",
-      "description": "Game framework + UI widgets",
-      "status": "completed",
-      "test_count": 180
-    },
-    "6": {
-      "name": "EDITOR",
-      "description": "DearPyGui-based editor",
-      "status": "completed",
-      "test_count": 136
-    },
-    "7": {
-      "name": "DEMO GAMES",
-      "description": "Bouncing Ball + Platformer + Shooter + Puzzle",
-      "status": "completed",
-      "test_count": 113
-    },
-    "8": {
-      "name": "COLLISION DETECTION",
-      "description": "AABB + OverlapDetector + SpatialHash",
-      "status": "completed",
-      "test_count": 20
-    },
-    "9": {
-      "name": "TIMER/SCHEDULER",
-      "description": "call_later + call_every + cancel + tick",
-      "status": "completed",
-      "test_count": 33
-    },
-    "10": {
-      "name": "HYBRID TIMER VALIDATOR + QUALITY GATE",
-      "description": "CI Gate + Pre-commit + TDD Timer System",
-      "status": "completed",
-      "test_count": 98
-    },
-    "11": {
-      "name": "ADVANCED RENDERER INTEGRATION",
-      "description": "Shader + Animation + Light + Spritesheet systems from test_engine",
-      "status": "completed",
-      "test_count": 44
-    },
-    "12": {
-      "name": "2.5D ISOMETRIC RENDERING",
-      "description": "Hades-level 2.5D rendering with isometric projection, height system, advanced lighting",
+      "name": "Oda/Run Akışı + Game Feel",
       "status": "in_progress",
-      "steps": {
-        "12.1": {
-          "name": "FAZ 1: Isometric Foundation",
-          "description": "IsometricProjection + HeightSprite + HeightMap + LayerManager",
-          "status": "completed",
-          "test_count": 27
-        },
-        "12.2": {
-          "name": "FAZ 2: Advanced Lighting",
-          "description": "Normal maps + Soft shadows + 3D-positioned lights",
-          "status": "completed",
-          "test_count": 25
-        },
-        "12.3": {
-          "name": "FAZ 3: Directional Sprites",
-          "description": "Multi-directional sprites + Billboard + Rotation smoothing",
-          "status": "completed",
-          "test_count": 13
-        },
-        "12.4": {
-          "name": "FAZ 4: Advanced VFX",
-          "description": "3D particles + Volumetric effects + Post-process stack",
-          "status": "completed",
-          "test_count": 35
-        },
-        "12.5": {
-          "name": "FAZ 5: Polish & Optimization",
-          "description": "SDF fonts + Combat polish + Performance optimization",
-          "status": "completed",
-          "test_count": 84
-        }
+      "target_test_count": 122,
+      "tasks": {
+        "W4-01": { "name": "Input buffer sistemi", "status": "pending", "test_target": 15 },
+        "W4-02": { "name": "Hit-stop / freeze frame", "status": "pending", "test_target": 10 },
+        "W4-03": { "name": "Screen shake controller", "status": "pending", "test_target": 12 },
+        "W4-04": { "name": "Room template library", "status": "pending", "test_target": 20 },
+        "W4-05": { "name": "Room graph entegrasyonu", "status": "pending", "test_target": 25 },
+        "W4-06": { "name": "Room encounter scripting", "status": "pending", "test_target": 15 },
+        "W4-07": { "name": "Room transition manager", "status": "pending", "test_target": 10 },
+        "W4-08": { "name": "Seed-based room gen", "status": "pending", "test_target": 15 }
       }
-    }
-  },
-
-  "missing_modules": {
-    "layer_2_engine": [
-    ],
-    "layer_3_world": [
-    ],
-    "layer_5_scripting": [
-      "statemachine.py",
-      "behaviour_tree.py",
-      "event_graph.py",
-      "blackboard.py"
-    ],
-    "layer_6_ui": [
-    ]
-  },
-
-  "quality_system": {
-    "pre_commit": {
-      "enabled": true,
-      "hooks": ["black", "ruff", "check-imports", "quick-tests"],
-      "duration": "~2 minutes"
     },
-    "ci_gate": {
-      "enabled": true,
-      "checks": ["format", "lint", "import-rules", "class-size", "tests", "coverage"],
-      "min_coverage": 80,
-      "duration": "~5-10 minutes"
-    },
-    "timer_validator": {
-      "enabled": false,
-      "mode": "shadow",
-      "discrepancy_threshold": 0
-    }
+    "5": { "name": "Item/Relik + Build Çeşitliliği", "status": "pending", "target_test_count": 120 },
+    "6": { "name": "Boss + Encounter", "status": "pending", "target_test_count": 136 },
+    "7": { "name": "Meta + Save", "status": "pending", "target_test_count": 110 },
+    "8": { "name": "UI/UX + Onboarding", "status": "pending", "target_test_count": 80 },
+    "9": { "name": "İçerik + Audio", "status": "pending", "target_test_count": 86 },
+    "10": { "name": "Stabilite", "status": "pending", "target_test_count": 158 },
+    "11": { "name": "Balans", "status": "pending", "target_test_count": 65 },
+    "12": { "name": "Release Candidate", "status": "pending", "target_test_count": 55 }
   },
 
   "statistics": {
-    "total_tests": 1569,
-    "passed_tests": 1569,
+    "total_tests": 1942,
+    "passed_tests": 1942,
     "skipped_tests": 2,
-    "failed_tests": 0,
-    "test_files": 48,
-    "source_files": 49,
-    "coverage_percent": 90,
-    "faz_12_progress": {
-      "faz_1_isometric": "100% (27/27 tests)",
-      "faz_2_lighting": "100% (25/25 tests)",
-      "faz_3_directional": "100% (13/13 tests)",
-      "faz_4_vfx": "100% (35/35 tests)",
-      "faz_5_polish": "100% (84/84 tests)",
-      "engine_completion": "100% (234/234 tests)"
-    }
+    "failed_tests": 0
   }
 }
