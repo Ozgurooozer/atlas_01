@@ -8,7 +8,7 @@ Dependencies: core.vec, engine.renderer.texture, engine.renderer.batch
 """
 
 from __future__ import annotations
-from typing import List, Optional, Tuple
+from typing import List
 from core.vec import Vec2
 from engine.renderer.texture import Texture
 from engine.renderer.batch import SpriteBatch

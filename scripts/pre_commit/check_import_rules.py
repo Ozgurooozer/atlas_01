@@ -1,7 +1,6 @@
 """Import rules checker - enforces star import, diversity limits, third-party rules."""
 import ast
 from pathlib import Path
-from collections import defaultdict
 
 from base_checker import BaseChecker, CheckResult
 

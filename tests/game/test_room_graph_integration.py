@@ -7,7 +7,6 @@ Layer 4 (Game/Run).
 TDD: RED phase — tests for enhanced RoomGraph.
 """
 from __future__ import annotations
-import pytest
 
 
 class TestRoomGraphGameRNGIntegration:

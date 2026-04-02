@@ -5,7 +5,6 @@ Tests for @reflect decorator and PropertyMeta system.
 Reflection enables automatic property discovery for Editor and Serialization.
 """
 
-import pytest
 
 
 class TestPropertyMeta:

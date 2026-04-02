@@ -1,4 +1,3 @@
-import pytest
 from world.components.camera_component import CameraComponent
 from world.transform import TransformComponent
 from world.actor import Actor

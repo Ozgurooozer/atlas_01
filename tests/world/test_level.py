@@ -3,11 +3,10 @@
 Test-First Development for Level management
 """
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from world.level import Level, LevelManager, SpawnPoint, TileMap
 from world.actor import Actor
-from core.object import Object
-from core.vec import Vec2, Vec3
+from core.vec import Vec3
 
 
 class TestSpawnPoint:

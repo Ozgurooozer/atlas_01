@@ -7,7 +7,6 @@ Layer 4 (Game/Combat), depends on core.object.
 TDD: RED phase.
 """
 from __future__ import annotations
-import pytest
 
 
 class TestHitStopBasics:

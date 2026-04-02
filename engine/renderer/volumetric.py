@@ -5,9 +5,9 @@ Provides volumetric fog and light shafts (god rays) for atmospheric effects.
 Layer: 2 (Engine)
 Dependencies: core.vec, core.color
 """
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from math import exp, sqrt
-from core.vec import Vec2, Vec3
+from core.vec import Vec3
 from core.color import Color
 
 

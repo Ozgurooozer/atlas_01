@@ -7,10 +7,9 @@ Actors contain Components that define their behavior.
 Layer: 3 (World)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
-from core.reflection import reflect, get_properties, get_property_value, set_property_value
+from core.reflection import reflect, get_properties
 from world.component import Component
 from world.actor import Actor
 

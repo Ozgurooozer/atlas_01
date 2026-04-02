@@ -2,7 +2,6 @@
 
 Test-First Development for Combat Polish (Days 16-17)
 """
-import pytest
 import math
 from engine.game.combat_polish import (
     DamageNumber, DamageNumberManager,

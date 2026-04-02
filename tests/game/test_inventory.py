@@ -1,7 +1,6 @@
 """Tests for inventory system."""
-import pytest
 from game.inventory.item import Item, ItemType
-from game.inventory.inventory import Inventory, InventorySlot
+from game.inventory.inventory import Inventory
 
 
 class TestItem:

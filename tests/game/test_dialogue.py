@@ -1,5 +1,4 @@
 """Tests for dialogue system."""
-import pytest
 from game.dialogue.dialogue import DialogueTree, DialogueNode, DialogueChoice
 
 

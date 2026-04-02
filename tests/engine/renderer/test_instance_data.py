@@ -1,5 +1,4 @@
 import pytest
-import math
 from hypothesis import given, strategies as st
 from engine.renderer.instance_data import InstanceData
 

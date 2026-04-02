@@ -1,4 +1,3 @@
-import pytest
 from engine.renderer.shader import NORMAL_MAP_VERTEX_SRC, NORMAL_MAP_FRAGMENT_SRC
 
 def test_normal_map_shader_sources_not_empty():

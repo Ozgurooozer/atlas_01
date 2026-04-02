@@ -39,14 +39,12 @@ from core.vec import Vec2, Vec3
 from core.color import Color
 from engine.renderer.isometric import IsometricProjection, IsometricCamera
 from engine.renderer.height_sprite import HeightSprite, HeightMap
-from engine.renderer.layer_manager import LayerManager, DepthSortKey
-from engine.renderer.normal_lighting import Light3D, LightManager, NormalMapShader
-from engine.renderer.soft_shadows import ShadowCaster, ShadowLight
-from engine.renderer.directional_sprite import DirectionalSprite, DirectionManager
-from engine.renderer.particle3d import ParticleEmitter3D, ParticleRenderer3D, BoxEmitter
+from engine.renderer.layer_manager import LayerManager
+from engine.renderer.normal_lighting import Light3D, LightManager
+from engine.renderer.particle3d import ParticleEmitter3D, ParticleRenderer3D
 from engine.renderer.volumetric import VolumetricFog
 from engine.renderer.postprocess_stack import (
-    PostProcessStack, ToneMapping, Vignette, BrightExtract
+    PostProcessStack, ToneMapping, Vignette
 )
 
 

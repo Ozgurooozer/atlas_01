@@ -1,5 +1,4 @@
 """Tests for game.progression module."""
-import pytest
 from game.progression.meta import MetaProgression, Unlockable
 
 

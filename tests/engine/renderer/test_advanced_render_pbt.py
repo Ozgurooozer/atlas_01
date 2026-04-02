@@ -1,4 +1,3 @@
-import pytest
 from hypothesis import given, strategies as st
 from hal.headless import HeadlessGPU
 
@@ -322,8 +321,7 @@ def test_material_batch_break(n_materials):
     batch.end()
     assert batch.texture_changes == n_materials
 
-from engine.renderer.light import Light2D, LightRenderer, LightType
-from core.color import Color
+from engine.renderer.light import Light2D, LightRenderer
 
 @given(
     enabled=st.booleans(),
@@ -362,7 +360,7 @@ def test_light_pass_round_trip():
     lr.end_light_pass()
     assert lr.light_map.fbo.is_bound == False
 
-from engine.renderer.postprocess_stack import PostProcessStack, PostProcessPass, BloomPass, ColorGradingPass
+from engine.renderer.postprocess_stack import PostProcessStack, BloomPass, ColorGradingPass
 
 @given(
     width=st.integers(min_value=1, max_value=1920),

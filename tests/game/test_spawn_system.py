@@ -1,5 +1,4 @@
 """Tests for game.ai.spawn_system module."""
-import pytest
 from core.vec import Vec2
 from core.object import Object
 from game.ai.archetypes import (

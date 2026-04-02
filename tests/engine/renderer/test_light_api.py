@@ -5,7 +5,6 @@ get_visible_point_lights() — private _lights erişimi yerine kullanılacak API
 PostProcessPass fail-fast uyarısı.
 """
 import warnings
-import pytest
 from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D, LightType
 from engine.renderer.postprocess_stack import (

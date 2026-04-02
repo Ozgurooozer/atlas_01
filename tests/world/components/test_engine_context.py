@@ -1,4 +1,3 @@
-import pytest
 from world.components.engine_context import EngineContext
 from world.component import Component
 

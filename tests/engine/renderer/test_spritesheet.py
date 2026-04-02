@@ -5,10 +5,8 @@ Layer: 2 (Engine)
 
 from __future__ import annotations
 
-import pytest
 
 from engine.renderer.texture import Texture, UVRegion
-from engine.renderer.animation import Animation
 
 
 class TestSpritesheet:

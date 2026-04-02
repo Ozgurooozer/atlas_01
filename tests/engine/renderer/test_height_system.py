@@ -1,5 +1,4 @@
 """Tests for height sprite and height map system."""
-import pytest
 from core.vec import Vec2
 from engine.renderer.height_sprite import HeightSprite, HeightMap
 

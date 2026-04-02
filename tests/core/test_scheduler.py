@@ -15,7 +15,6 @@ Dependencies: None (stdlib only)
 
 from __future__ import annotations
 
-import pytest
 from typing import List
 
 

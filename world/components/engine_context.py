@@ -9,7 +9,7 @@ Dependencies: None (Duck typing for Engine systems)
 """
 
 from __future__ import annotations
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
     # Avoid circular imports

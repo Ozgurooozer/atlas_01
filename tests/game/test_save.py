@@ -1,5 +1,4 @@
 """Tests for save system."""
-import pytest
 from game.save.save import SaveSystem, SaveData
 from hal.headless import MemoryFilesystem
 

@@ -2,10 +2,8 @@
 
 Test-First Development for UI Button widget
 """
-import pytest
 from unittest.mock import MagicMock
 from ui.button import Button, ButtonState
-from core.color import Color
 
 
 class TestButtonState:

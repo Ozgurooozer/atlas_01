@@ -1,7 +1,5 @@
 """Tests for Texture class."""
 
-import pytest
-from typing import Tuple
 
 
 class TestTexture:
@@ -225,7 +223,6 @@ class TestTextureEquality:
     def test_texture_has_guid(self):
         """Texture should have GUID if it inherits from Object."""
         from engine.renderer.texture import Texture
-        from core.guid import GUID
 
         texture = Texture(width=16, height=16)
 

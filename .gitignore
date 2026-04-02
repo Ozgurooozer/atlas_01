@@ -1,1 +1,34 @@
-Nothing should be ignored based on the provided file changes. The added files (PRODUCTION_PLAN.md, qwen_kurallar.md, scripts/check_all_quality.py) are all source/config files that should be tracked in version control.
+```
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Test coverage reports
+.coverage
+htmlcov/
+.coverage.*
+
+# Compressed files
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.zip
+*.7z
+*.rar
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Dependencies and build artifacts
+.hypothesis/
+
+```

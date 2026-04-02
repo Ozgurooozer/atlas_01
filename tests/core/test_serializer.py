@@ -5,7 +5,6 @@ Tests for JSON serialization system using reflection.
 Serializer works with Object and reflected properties.
 """
 
-import pytest
 
 
 class TestSerializer:

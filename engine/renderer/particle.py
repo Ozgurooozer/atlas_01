@@ -10,7 +10,6 @@ Dependencies: core.vec, core.color, engine.renderer.sprite, engine.renderer.batc
 
 from __future__ import annotations
 import random
-from typing import List, Optional, Tuple
 from core.vec import Vec2
 from core.color import Color
 from engine.renderer.sprite import Sprite

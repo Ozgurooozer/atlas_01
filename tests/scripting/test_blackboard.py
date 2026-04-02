@@ -8,7 +8,6 @@ Layer: 5 (Scripting)
 Dependencies: core.object
 """
 
-import pytest
 from scripting.blackboard import Blackboard
 
 

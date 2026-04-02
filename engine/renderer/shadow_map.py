@@ -9,7 +9,7 @@ Dependencies: hal.interfaces, engine.renderer.shader
 
 from __future__ import annotations
 import struct
-from typing import List, Optional, Tuple, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from hal.interfaces import IGPUDevice, IFramebuffer

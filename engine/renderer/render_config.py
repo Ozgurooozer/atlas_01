@@ -7,7 +7,7 @@ Layer: 2 (Engine)
 Dependencies: dataclasses
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Tuple
 
 

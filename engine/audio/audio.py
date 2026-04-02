@@ -9,7 +9,7 @@ Dependencies: ISubsystem (Layer 2), pyglet (Layer 0)
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Dict
 
 from engine.subsystem import ISubsystem
 

@@ -1,6 +1,4 @@
 """Tests for isometric projection system."""
-import pytest
-import math
 from core.vec import Vec2
 
 

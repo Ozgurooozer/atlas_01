@@ -1,5 +1,4 @@
 import math
-import pytest
 from hypothesis import given, strategies as st
 from world.transform import TransformComponent
 

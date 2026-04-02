@@ -2,11 +2,9 @@
 
 Test-First Development for FAZ 12.5 - SDF Fonts
 """
-import pytest
 from engine.renderer.sdf_font import (
     SDFGlyph, SDFFont, SDFTextRenderer, SDFFontManager
 )
-from core.vec import Vec2
 from core.color import Color
 
 

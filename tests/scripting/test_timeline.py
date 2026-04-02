@@ -1,5 +1,4 @@
 """Tests for timeline system."""
-import pytest
 from scripting.timeline import Timeline, TimelineEvent
 
 

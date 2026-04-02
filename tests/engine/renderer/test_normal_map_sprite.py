@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.sprite import Sprite

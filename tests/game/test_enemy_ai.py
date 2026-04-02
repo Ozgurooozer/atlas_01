@@ -1,5 +1,4 @@
 """Tests for game.ai.enemy_ai module."""
-import pytest
 from core.vec import Vec2
 from core.object import Object
 from game.ai.archetypes import (

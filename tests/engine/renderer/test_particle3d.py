@@ -1,7 +1,5 @@
 """Tests for 3D particle system."""
-import pytest
-from core.vec import Vec2, Vec3
-from core.color import Color
+from core.vec import Vec3
 
 
 class TestParticle3D:
@@ -175,7 +173,7 @@ class TestEmissionShapes:
 
     def test_box_emission(self):
         """Should emit particles within box volume."""
-        from engine.renderer.particle3d import BoxEmitter, Particle3D
+        from engine.renderer.particle3d import BoxEmitter
         
         box = BoxEmitter(size=Vec3(100, 100, 100))
         

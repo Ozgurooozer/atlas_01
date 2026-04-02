@@ -9,7 +9,6 @@ Dependencies: core.vec, core.color, hal.interfaces
 """
 
 from __future__ import annotations
-import math
 from typing import List, Optional
 
 from core.vec import Vec2

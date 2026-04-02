@@ -2,7 +2,6 @@
 
 Test-First Development for UI Label widget
 """
-import pytest
 from ui.label import Label, TextAlign
 from core.color import Color
 

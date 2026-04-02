@@ -2,7 +2,6 @@
 
 Test-First Development for Tag management
 """
-import pytest
 from world.tag import Tag, Taggable, TagManager
 
 

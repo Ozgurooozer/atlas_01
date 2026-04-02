@@ -8,7 +8,7 @@ Layer: 4 (Game/AI)
 Dependencies: core.object
 """
 from __future__ import annotations
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from core.object import Object
 
 

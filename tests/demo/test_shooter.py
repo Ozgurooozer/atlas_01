@@ -17,7 +17,6 @@ Tests:
 Minimum 20 tests required.
 """
 
-import pytest
 from core.vec import Vec2
 
 
@@ -76,7 +75,7 @@ class TestPlayerActor:
 
     def test_player_can_move(self):
         """Player should be able to move based on input."""
-        from demo.shooter import PlayerActor, ShooterGame
+        from demo.shooter import ShooterGame
 
         game = ShooterGame()
         game.initialize()

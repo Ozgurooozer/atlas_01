@@ -7,7 +7,7 @@ Layer: 5 (Scripting)
 Dependencies: core.object
 """
 from __future__ import annotations
-from typing import Any, Callable, List, Optional
+from typing import Callable, List, Optional
 from core.object import Object
 
 

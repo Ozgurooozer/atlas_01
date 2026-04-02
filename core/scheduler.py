@@ -20,8 +20,7 @@ Example:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, List, Optional
-import time
+from typing import Callable, List
 
 
 @dataclass

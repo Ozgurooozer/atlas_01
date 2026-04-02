@@ -7,7 +7,7 @@ Layer: 3 (World/Components)
 Dependencies: core.object
 """
 from __future__ import annotations
-from typing import Any, Dict, Callable
+from typing import Any, Dict
 from world.component import Component
 
 

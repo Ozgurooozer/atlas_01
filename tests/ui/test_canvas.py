@@ -6,7 +6,6 @@ Canvas is the root container for UI widgets.
 Layer: 6 (UI)
 """
 
-import pytest
 from ui.widget import Widget
 from ui.canvas import Canvas
 

@@ -7,7 +7,6 @@ Layer 4 (Game/Run), depends on core.object, game.run.game_rng.
 TDD: RED phase first, then GREEN.
 """
 from __future__ import annotations
-import pytest
 
 
 class TestEncounter:

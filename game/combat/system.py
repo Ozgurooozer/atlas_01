@@ -8,14 +8,14 @@ Layer: 4 (Game/Combat)
 Dependencies: game.combat.model, core.eventbus
 """
 from __future__ import annotations
-from typing import Optional, Dict, List, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from core.object import Object
 from core.eventbus import EventBus
 from core.vec import Vec2
 from world.transform import TransformComponent
 
 from game.combat.model import (
-    DamageData, DamageType, CombatResult, CombatEventType, StatusEffectType
+    DamageData, DamageType, CombatResult, CombatEventType
 )
 
 if TYPE_CHECKING:

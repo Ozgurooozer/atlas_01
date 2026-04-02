@@ -6,7 +6,7 @@ These are abstract interfaces - tests verify the interface contract.
 """
 
 import pytest
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class TestIWindowInterface:

@@ -7,7 +7,6 @@ Dependencies: ISubsystem, pyglet audio (hal)
 TDD Phase: RED - Bu testler implementation'dan ÖNCE yazıldı.
 """
 
-import pytest
 
 
 class TestAudioBasics:

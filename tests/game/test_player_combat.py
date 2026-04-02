@@ -13,7 +13,6 @@ from world.components.combat_state_component import CombatStateComponent
 from game.combat.player_combat import (
     PlayerCombatScript,
     PLAYER_STATE_IDLE,
-    PLAYER_STATE_MOVE,
     PLAYER_STATE_ATTACK,
     PLAYER_STATE_DASH,
     PLAYER_STATE_HURT,
@@ -21,12 +20,9 @@ from game.combat.player_combat import (
     ATTACK_DURATION,
     ATTACK_COOLDOWN,
     COMBO_WINDOW,
-    MAX_COMBO_HITS,
     DASH_DURATION,
     DASH_COOLDOWN,
-    DASH_IFRAMES,
     HURT_DURATION,
-    HURT_IFRAMES,
     SKILL_COOLDOWNS,
 )
 

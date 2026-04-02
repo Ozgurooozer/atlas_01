@@ -1,4 +1,3 @@
-import pytest
 from hypothesis import given, strategies as st
 from world.components.sprite_component import SpriteComponent
 from world.transform import TransformComponent

@@ -1,6 +1,4 @@
 """Tests for soft shadow system."""
-import pytest
-import math
 from core.vec import Vec2
 
 

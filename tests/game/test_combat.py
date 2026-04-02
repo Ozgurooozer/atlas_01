@@ -1,8 +1,7 @@
 """Tests for game.combat module."""
-import pytest
 from game.combat.model import DamageData, DamageType, CombatResult, CombatEventType, StatusEffectType
 from game.combat.system import CombatSystem
-from game.combat.effects import StatusEffectProcessor, DOT_DAMAGE, TICK_INTERVAL
+from game.combat.effects import StatusEffectProcessor, TICK_INTERVAL
 from core.eventbus import EventBus
 from core.vec import Vec2
 

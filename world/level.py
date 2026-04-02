@@ -9,8 +9,7 @@ Dependencies: core.object, core.vec, world.actor
 from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass, field
 
-from core.vec import Vec2, Vec3
-from core.object import Object
+from core.vec import Vec3
 
 
 @dataclass

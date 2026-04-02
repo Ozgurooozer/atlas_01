@@ -1,5 +1,4 @@
 """Tests for game.ai module."""
-import pytest
 from game.ai.archetypes import AIArchetype, MeleeChaserArchetype, RangedKiterArchetype, TankChargerArchetype
 
 

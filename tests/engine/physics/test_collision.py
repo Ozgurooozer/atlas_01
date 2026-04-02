@@ -6,7 +6,6 @@ Tests for AABB collision, overlap detection, and spatial hashing.
 Layer: 2 (Engine)
 """
 
-import pytest
 
 
 class TestAABB:

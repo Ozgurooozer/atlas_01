@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock
 from engine.renderer.batch import SpriteBatch
 from engine.renderer.sprite import Sprite

@@ -15,7 +15,7 @@ from typing import Optional, Tuple, TYPE_CHECKING
 from core.vec import Vec2
 
 if TYPE_CHECKING:
-    from engine.renderer.sprite import Sprite
+    pass
 
 
 class Camera:

@@ -1,6 +1,5 @@
 """Tests for Editor application entry point."""
 
-import pytest
 from core.object import Object
 
 

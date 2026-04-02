@@ -9,7 +9,6 @@ Dependencies: core.object, core.vec, scripting.*, game.ai.archetypes
 """
 from __future__ import annotations
 
-import math
 from enum import Enum
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
@@ -18,7 +17,6 @@ from core.vec import Vec2
 from scripting.blackboard import Blackboard
 from scripting.behaviour_tree import (
     BehaviourTree,
-    NodeStatus,
     Sequence,
     Selector,
     ActionNode,

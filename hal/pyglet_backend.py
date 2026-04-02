@@ -421,7 +421,6 @@ class ModernGLDevice(IGPUDevice):
         """Lazy initialization of light shader program."""
         if self._light_program is not None:
             return
-        import moderngl
         self._light_program = self._compile_program(self._light_vertex_src, self._light_fragment_src)
         # Quad: 4 vertices × (pos2) = 4 × 2 floats × 4 bytes
         self._light_vbo = self._ctx.buffer(reserve=4 * 2 * 4)
@@ -434,7 +433,6 @@ class ModernGLDevice(IGPUDevice):
         """Lazy initialization of normal map shader program."""
         if self._nm_program is not None:
             return
-        import moderngl
         # Use defaults from engine.renderer.shader if not provided
         if self._nm_vertex_src is None or self._nm_fragment_src is None:
             from engine.renderer.shader import NORMAL_MAP_VERTEX_SRC, NORMAL_MAP_FRAGMENT_SRC

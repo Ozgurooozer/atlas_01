@@ -1,5 +1,4 @@
 """Tests for combat components."""
-import pytest
 from world.components.health_component import HealthComponent
 from world.components.combat_stats_component import CombatStatsComponent
 from world.components.combatant_component import CombatantComponent

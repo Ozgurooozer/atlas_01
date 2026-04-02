@@ -1,8 +1,7 @@
 """Tests for behaviour tree system."""
-import pytest
 from scripting.behaviour_tree import (
     NodeStatus, Sequence, Selector, Parallel,
-    Inverter, Repeater, ActionNode, ConditionNode, BehaviourTree
+    Inverter, ActionNode, ConditionNode, BehaviourTree
 )
 
 

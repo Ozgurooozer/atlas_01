@@ -6,8 +6,7 @@ Layer: 2 (Engine)
 Dependencies: core.vec
 """
 from typing import List, Dict, Set, Tuple, Optional
-from math import sqrt
-from core.vec import Vec2, Vec3
+from core.vec import Vec2
 from core.color import Color
 
 

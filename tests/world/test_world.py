@@ -7,12 +7,10 @@ It manages actor lifecycle and provides queries.
 Layer: 3 (World)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
 from world.actor import Actor
 from world.component import Component
-from world.transform import TransformComponent
 from world.world import World
 
 

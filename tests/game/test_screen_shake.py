@@ -7,7 +7,6 @@ Layer 4 (Game/Camera), depends on core.object, core.vec.
 TDD: RED phase.
 """
 from __future__ import annotations
-import pytest
 from core.vec import Vec2
 
 

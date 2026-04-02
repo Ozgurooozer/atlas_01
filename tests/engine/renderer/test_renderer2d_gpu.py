@@ -11,7 +11,7 @@ Property 8: Invisible Sprite Skipped
   **Validates: Requirements 7.4**
 """
 
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock
 from hypothesis import given, settings
 from hypothesis import strategies as st
 

@@ -9,7 +9,7 @@ Dependencies: None
 """
 
 from __future__ import annotations
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 # Type alias for event handlers
 EventHandler = Callable[[Dict[str, Any]], None]

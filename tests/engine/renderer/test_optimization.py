@@ -2,8 +2,6 @@
 
 Test-First Development for Optimization (Days 18-19)
 """
-import pytest
-import math
 from engine.renderer.optimization import (
     SpatialHash, FrustumCuller,
     RenderBatch, BatchedRenderer,

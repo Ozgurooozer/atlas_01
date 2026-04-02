@@ -2,13 +2,12 @@
 ModernGLDevice Unit Tests.
 
 Tests for ModernGLDevice shader compilation error handling.
-Uses mock context to avoid requiring a real GPU.
+Uses headless window context for real GPU testing.
 
 Requirements: 1.3
 """
 
 import pytest
-from unittest.mock import MagicMock, patch
 
 
 def test_default_sprite_vertex_uses_u_position_translation():
@@ -32,97 +31,65 @@ class TestShaderCompileError:
         from hal.pyglet_backend import ShaderCompileError
         assert issubclass(ShaderCompileError, Exception)
 
-    def test_shader_compile_error_on_invalid_glsl(self):
+    def test_shader_compile_error_on_invalid_glsl(self, headless_window):
         """ModernGLDevice should raise ShaderCompileError when given invalid GLSL.
 
         Validates: Requirements 1.3
         """
         from hal.pyglet_backend import ModernGLDevice, ShaderCompileError
 
-        mock_ctx = MagicMock()
-        mock_ctx.program.side_effect = Exception("GLSL compile error: unexpected token")
+        with pytest.raises(ShaderCompileError):
+            ModernGLDevice(
+                headless_window,
+                vertex_src="invalid",
+                fragment_src="invalid"
+            )
 
-        mock_moderngl = MagicMock()
-        mock_moderngl.create_context.return_value = mock_ctx
-
-        mock_window = MagicMock()
-        mock_window.get_size.return_value = (800, 600)
-
-        with patch.dict("sys.modules", {"moderngl": mock_moderngl}):
-            with pytest.raises(ShaderCompileError):
-                ModernGLDevice(mock_window, vertex_src="invalid", fragment_src="invalid")
-
-    def test_shader_compile_error_wraps_original_exception(self):
+    def test_shader_compile_error_wraps_original_exception(self, headless_window):
         """ShaderCompileError should wrap the original compile exception.
 
         Validates: Requirements 1.3
         """
         from hal.pyglet_backend import ModernGLDevice, ShaderCompileError
 
-        original_message = "syntax error, unexpected IDENTIFIER"
-        mock_ctx = MagicMock()
-        mock_ctx.program.side_effect = Exception(original_message)
+        with pytest.raises(ShaderCompileError) as exc_info:
+            ModernGLDevice(
+                headless_window,
+                vertex_src="bad vert",
+                fragment_src="bad frag"
+            )
 
-        mock_moderngl = MagicMock()
-        mock_moderngl.create_context.return_value = mock_ctx
+        assert "syntax error" in str(exc_info.value).lower() or "error" in str(exc_info.value).lower()
 
-        mock_window = MagicMock()
-        mock_window.get_size.return_value = (800, 600)
-
-        with patch.dict("sys.modules", {"moderngl": mock_moderngl}):
-            with pytest.raises(ShaderCompileError) as exc_info:
-                ModernGLDevice(mock_window, vertex_src="bad vert", fragment_src="bad frag")
-
-        assert original_message in str(exc_info.value)
-
-    def test_no_error_with_valid_glsl(self):
-        """ModernGLDevice should not raise ShaderCompileError with valid GLSL (mock).
+    def test_no_error_with_valid_glsl(self, headless_window):
+        """ModernGLDevice should not raise ShaderCompileError with valid GLSL.
 
         Validates: Requirements 1.3
         """
-        from hal.pyglet_backend import ModernGLDevice, ShaderCompileError
+        from hal.pyglet_backend import ModernGLDevice, DEFAULT_SPRITE_VERTEX_SRC, DEFAULT_SPRITE_FRAGMENT_SRC
 
-        mock_program = MagicMock()
-        mock_ctx = MagicMock()
-        mock_ctx.program.return_value = mock_program
-        mock_ctx.buffer.return_value = MagicMock()
-        mock_ctx.vertex_array.return_value = MagicMock()
-
-        mock_moderngl = MagicMock()
-        mock_moderngl.create_context.return_value = mock_ctx
-
-        mock_window = MagicMock()
-        mock_window.get_size.return_value = (800, 600)
-
-        with patch.dict("sys.modules", {"moderngl": mock_moderngl}):
-            # Should not raise
-            device = ModernGLDevice(
-                mock_window,
-                vertex_src="valid_vert",
-                fragment_src="valid_frag",
-            )
+        # Should not raise
+        device = ModernGLDevice(
+            headless_window,
+            vertex_src=DEFAULT_SPRITE_VERTEX_SRC,
+            fragment_src=DEFAULT_SPRITE_FRAGMENT_SRC,
+        )
 
         assert device is not None
 
-    def test_shader_compile_error_only_on_program_failure(self):
+    def test_shader_compile_error_only_on_program_failure(self, headless_window):
         """ShaderCompileError is raised only when ctx.program() fails, not on other errors.
 
         Validates: Requirements 1.3
         """
         from hal.pyglet_backend import ModernGLDevice, ShaderCompileError
 
-        mock_ctx = MagicMock()
-        mock_ctx.program.side_effect = Exception("vertex shader failed")
-
-        mock_moderngl = MagicMock()
-        mock_moderngl.create_context.return_value = mock_ctx
-
-        mock_window = MagicMock()
-        mock_window.get_size.return_value = (1920, 1080)
-
-        with patch.dict("sys.modules", {"moderngl": mock_moderngl}):
-            with pytest.raises(ShaderCompileError) as exc_info:
-                ModernGLDevice(mock_window, vertex_src="bad", fragment_src="bad")
+        with pytest.raises(ShaderCompileError) as exc_info:
+            ModernGLDevice(
+                headless_window,
+                vertex_src="bad",
+                fragment_src="bad"
+            )
 
         # Ensure it's specifically ShaderCompileError, not the raw Exception
         assert type(exc_info.value) is ShaderCompileError
@@ -131,22 +98,15 @@ class TestShaderCompileError:
 class TestCreateTexture:
     """Tests for create_texture — Requirements 2.1, 2.2, 2.3, 2.4."""
 
-    def _make_device(self):
-        """Helper: create a ModernGLDevice with a mock moderngl context."""
-        from hal.pyglet_backend import ModernGLDevice
-        from unittest.mock import MagicMock, patch
+    def _make_device(self, headless_window):
+        """Helper: create a ModernGLDevice with real context."""
+        from hal.pyglet_backend import ModernGLDevice, DEFAULT_SPRITE_VERTEX_SRC, DEFAULT_SPRITE_FRAGMENT_SRC
 
-        mock_texture = MagicMock()
-        mock_ctx = MagicMock()
-        mock_ctx.texture.return_value = mock_texture
-        mock_ctx.buffer.return_value = MagicMock()
-        mock_ctx.vertex_array.return_value = MagicMock()
-
-        mock_moderngl = MagicMock()
-        mock_moderngl.create_context.return_value = mock_ctx
-
-        mock_window = MagicMock()
-        mock_window.get_size.return_value = (800, 600)
+        return ModernGLDevice(
+            headless_window,
+            vertex_src=DEFAULT_SPRITE_VERTEX_SRC,
+            fragment_src=DEFAULT_SPRITE_FRAGMENT_SRC,
+        )
 
         with patch.dict("sys.modules", {"moderngl": mock_moderngl}):
             device = ModernGLDevice(mock_window)

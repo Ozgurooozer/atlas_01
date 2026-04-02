@@ -1,11 +1,9 @@
 """Tests for Renderer2D sprite drawing functionality."""
 
-import pytest
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.texture import Texture
 from engine.renderer.sprite import Sprite
 from hal.headless import HeadlessGPU
-from core.vec import Vec2
 
 
 class TestRendererDrawSprite:

@@ -1,5 +1,4 @@
 """Tests for PhysicsBodyCollider bridge."""
-import pytest
 from engine.physics.physics import Physics2D
 from engine.physics.overlap import OverlapDetector
 from engine.physics.body_collider import PhysicsBodyCollider

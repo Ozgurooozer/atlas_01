@@ -7,8 +7,6 @@ It's a fundamental component for any spatial entity.
 Layer: 3 (World)
 """
 
-import pytest
-import math
 from world.component import Component
 from world.transform import TransformComponent
 from core.reflection import get_properties

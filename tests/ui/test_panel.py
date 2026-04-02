@@ -2,7 +2,6 @@
 
 Test-First Development for UI Panel widget
 """
-import pytest
 from unittest.mock import MagicMock
 from ui.panel import Panel
 from ui.label import Label
