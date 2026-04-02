@@ -1,0 +1,4 @@
+# file: /workspace/world/transform.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.01, 1.0, -360, 360, 'Rotation in degrees', 'Transform', 'X scale factor', 'Y scale factor', 'float', 'rotation', 'scale_x', 'scale_y', 'x', 'y']

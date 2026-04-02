@@ -1,0 +1,4 @@
+# file: /workspace/world/level.py
+# hypothesis_version: 6.151.10
+
+[32.0, 'default', 'down', 'enabled', 'left', 'right', 'tags', 'tick', 'up']

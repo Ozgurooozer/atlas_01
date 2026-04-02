@@ -11,8 +11,6 @@ except ImportError:
     HAS_PYGLET = False
 
 sys.path.insert(0, '.')
-from core.vec import Vec2
-from core.color import Color
 from engine.renderer.isometric import IsometricProjection
 
 

@@ -1,9 +1,15 @@
 """Tests for Prefab system.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+
 Test-First Development for Prefab management
 """
 import pytest
-from unittest.mock import MagicMock, patch
 from world.prefab import Prefab, PrefabInstance, PrefabManager, ComponentData
 
 
@@ -144,7 +150,7 @@ class TestPrefabInstance:
         prefab = Prefab("enemy")
         prefab.add_component(ComponentData("health", {"value": 100}))
         
-        obj = MagicMock()
+        obj = MockObject()
         obj.components = []
         
         def add_component(type, **props):

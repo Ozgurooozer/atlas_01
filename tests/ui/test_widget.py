@@ -6,10 +6,9 @@ Widget is the base class for all UI elements.
 Layer: 6 (UI)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
-from core.reflection import reflect, get_properties
+from core.reflection import get_properties
 from ui.widget import Widget
 
 

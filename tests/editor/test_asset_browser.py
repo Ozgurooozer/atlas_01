@@ -1,6 +1,5 @@
 """Tests for Asset Browser panel."""
 
-import pytest
 from editor.main import Editor, EditorPanel
 
 

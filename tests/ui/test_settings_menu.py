@@ -3,10 +3,8 @@
 Test-First Development for Settings Menu
 """
 import pytest
-from unittest.mock import MagicMock, patch
 from ui.settings_menu import SettingsMenu, SettingsSlider, SettingsToggle, SettingsDropdown
 from engine.settings import Settings
-from core.color import Color
 
 
 class TestSettingsSlider:

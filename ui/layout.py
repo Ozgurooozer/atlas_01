@@ -5,7 +5,7 @@ Provides layout managers for organizing UI elements.
 Layer: 6 (UI)
 Dependencies: ui.panel, ui.label, ui.button
 """
-from typing import List, Any
+from typing import Any
 from abc import ABC, abstractmethod
 
 

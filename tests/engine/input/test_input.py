@@ -7,7 +7,6 @@ Uses headless implementation for CI compatibility.
 Layer: 2 (Engine)
 """
 
-import pytest
 from engine.subsystem import ISubsystem
 from engine.input.input_handler import IInput, InputHandler
 

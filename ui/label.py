@@ -5,7 +5,7 @@ Provides text rendering and display for UI.
 Layer: 6 (UI)
 Dependencies: core.color, core.vec
 """
-from enum import Enum, auto
+from enum import Enum
 from typing import Tuple, Optional
 from core.color import Color
 

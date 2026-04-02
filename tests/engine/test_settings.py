@@ -5,9 +5,7 @@ Test-First Development for Settings system
 import pytest
 import os
 import tempfile
-import json
 from engine.settings import Settings, SettingsCategory, VideoSettings, AudioSettings, InputSettings
-from core.color import Color
 
 
 class TestSettingsCategory:

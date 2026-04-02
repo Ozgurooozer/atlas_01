@@ -6,7 +6,6 @@ Layer: 2 (Engine)
 Dependencies: core.vec, engine.renderer.height_sprite
 """
 from typing import List, Dict, Any, Optional
-from core.vec import Vec2
 from engine.renderer.height_sprite import HeightSprite
 
 

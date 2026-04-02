@@ -31,8 +31,7 @@ from engine.renderer.isometric import IsometricProjection
 from engine.renderer.height_sprite import HeightSprite
 from engine.renderer.layer_manager import LayerManager
 from engine.renderer.normal_lighting import Light3D, LightManager
-from engine.renderer.soft_shadows import ShadowCaster, ShadowLight
-from engine.renderer.directional_sprite import DirectionalSprite, DirectionManager
+from engine.renderer.soft_shadows import ShadowLight
 from engine.renderer.particle3d import ParticleEmitter3D
 from engine.renderer.volumetric import VolumetricFog
 from engine.renderer.postprocess_stack import (

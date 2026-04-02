@@ -1,0 +1,4 @@
+# file: /workspace/world/components/hurtbox_component.py
+# hypothesis_version: 6.151.10
+
+[0.0, 30.0, 50.0, 'body', 'height', 'offset_x', 'offset_y', 'tag', 'width']

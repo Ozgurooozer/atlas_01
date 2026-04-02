@@ -1,0 +1,4 @@
+# file: /workspace/game/camera/screen_shake.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.1, 0.2, 0.4, 0.5, 1.0, 3.0, 6.0, 10.0, 12.9898, 25.0, 78.233, 100.0, 1000.0, 43758.5453, 'ScreenShake', 'amplitude', 'direction', 'duration', 'elapsed', 'frequency', 'seed']

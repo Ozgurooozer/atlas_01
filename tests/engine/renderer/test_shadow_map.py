@@ -1,7 +1,5 @@
-import pytest
-from unittest.mock import MagicMock
 from engine.renderer.shadow_map import ShadowMapRenderer
-from engine.renderer.light import LightRenderer, Light2D, LightType
+from engine.renderer.light import LightRenderer, Light2D
 from hal.interfaces import IGPUDevice
 
 def test_shadow_map_renderer_lifecycle():

@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/optimization.py
+# hypothesis_version: 6.151.10
+
+[0.0, 100.0, 768, 1000, 1024, 'batch_count', 'batches_created', 'culled_count', 'max_batch_size', 'spatial_objects', 'total_objects', 'visible_count']

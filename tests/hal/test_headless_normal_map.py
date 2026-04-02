@@ -1,4 +1,3 @@
-import pytest
 from hal.headless import HeadlessGPU
 
 def test_headless_gpu_normal_map_no_op():

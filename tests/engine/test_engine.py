@@ -5,7 +5,6 @@ Tests for the Engine class - the main subsystem manager.
 Engine manages lifecycle of all subsystems (Renderer, Physics, etc).
 """
 
-import pytest
 
 
 class TestEngineCreation:

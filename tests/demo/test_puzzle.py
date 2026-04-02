@@ -13,9 +13,7 @@ This test suite validates the puzzle game implementation including:
 Uses HeadlessGPU and HeadlessWindow for testing.
 """
 
-import pytest
-from core.vec import Vec2
-from hal.headless import HeadlessGPU, HeadlessWindow, MemoryFilesystem
+from hal.headless import MemoryFilesystem
 
 
 class TestPuzzleGridCreation:
@@ -261,7 +259,7 @@ class TestPuzzleGravity:
 
     def test_new_gems_spawn_at_top(self):
         """New gems should spawn at top after gravity."""
-        from demo.puzzle import PuzzleGame, Gem
+        from demo.puzzle import PuzzleGame
 
         game = PuzzleGame()
         game.initialize()
@@ -424,7 +422,6 @@ class TestPuzzleSaveLoad:
     def test_can_save_game_state(self):
         """Should be able to save game state."""
         from demo.puzzle import PuzzleGame
-        from core.serializer import Serializer
 
         game = PuzzleGame()
         game.initialize()

@@ -1,6 +1,4 @@
 """Tests for normal map lighting system."""
-import pytest
-from core.vec import Vec2
 from core.color import Color
 
 

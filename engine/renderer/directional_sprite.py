@@ -6,7 +6,7 @@ Layer: 2 (Engine)
 Dependencies: core.vec
 """
 from typing import List, Optional, Dict
-from math import atan2, degrees, radians, sin, cos, pi, fabs
+from math import atan2, degrees, fabs
 from core.vec import Vec2
 
 

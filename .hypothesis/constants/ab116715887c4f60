@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/render_config.py
+# hypothesis_version: 6.151.10
+
+[0.15, 0.2, 255, 720, 1000, 1080, 1280, 1920, 2000, 'RenderConfig']

@@ -1,6 +1,5 @@
 """Tests for Vec2 and Vec3 math utilities."""
 
-import pytest
 import math
 
 

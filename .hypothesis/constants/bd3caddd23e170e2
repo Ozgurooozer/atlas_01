@@ -1,0 +1,4 @@
+# file: /workspace/game/inventory/inventory.py
+# hypothesis_version: 6.151.10
+
+['Inventory', 'InventorySlot(empty)', 'capacity', 'item', 'quantity', 'slots']

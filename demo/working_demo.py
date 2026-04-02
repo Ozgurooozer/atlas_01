@@ -5,7 +5,7 @@ sys.path.insert(0, '.')
 import pyglet
 import math
 from pyglet.window import key
-from core.vec import Vec2, Vec3
+from core.vec import Vec2
 from core.color import Color
 from engine.renderer.height_sprite import HeightSprite
 

@@ -1,6 +1,4 @@
-import pytest
 from world.components.sprite_component import SpriteComponent
-from world.transform import TransformComponent
 from world.actor import Actor
 
 class MockSprite:

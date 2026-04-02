@@ -5,7 +5,6 @@ Layer: 2 (Engine)
 
 from __future__ import annotations
 
-import pytest
 
 from core.color import Color
 from core.vec import Vec2

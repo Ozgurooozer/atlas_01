@@ -5,14 +5,12 @@ Adım A stabilizasyon: config preset'leri, placeholder texture, merkezi logger.
 """
 import warnings
 import pytest
-from unittest.mock import MagicMock
 from engine.renderer.render_config import RenderConfig
 from engine.renderer.render_logger import RenderLogger
 from engine.renderer.texture import Texture
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.sprite import Sprite
 from hal.headless import HeadlessGPU
-from hal.interfaces import IGPUDevice
 
 
 # ---------------------------------------------------------------------------

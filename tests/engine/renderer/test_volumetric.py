@@ -1,7 +1,5 @@
 """Tests for volumetric effects system."""
-import pytest
-from core.vec import Vec2, Vec3
-from core.color import Color
+from core.vec import Vec3
 
 
 class TestVolumetricFog:

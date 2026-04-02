@@ -1,0 +1,4 @@
+# file: /workspace/game/run/game_mode.py
+# hypothesis_version: 6.151.10
+
+['RunGameMode', 'run_controller']

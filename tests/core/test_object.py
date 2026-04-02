@@ -5,7 +5,6 @@ Tests for the Object class - the foundation of everything in the engine.
 Actor, Component, Widget, Asset all inherit from Object.
 """
 
-import pytest
 
 
 class TestObjectCreation:

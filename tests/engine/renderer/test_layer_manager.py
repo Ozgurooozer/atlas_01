@@ -1,7 +1,5 @@
 """Tests for layer manager and depth sorting system."""
-import pytest
 from core.vec import Vec2
-from engine.renderer.layer_manager import LayerManager, DepthSortKey
 from engine.renderer.height_sprite import HeightSprite
 
 

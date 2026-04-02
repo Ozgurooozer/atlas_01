@@ -1,6 +1,5 @@
 """Tests for Viewport panel."""
 
-import pytest
 from editor.main import Editor, EditorPanel
 
 

@@ -14,6 +14,8 @@ __all__ = [
     "RunState",
     "RunPhase",
     "RoomType",
+    "Room",
+    "RoomGraph",
     "RunGameMode",
     "RunController",
 ]

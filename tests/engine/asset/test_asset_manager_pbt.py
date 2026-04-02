@@ -1,6 +1,13 @@
 """
 Property-Based Tests for AssetManager.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+
 Property 5: AssetManager Cache Idempotence
   Validates: Requirements 6.2
 
@@ -9,7 +16,6 @@ Property 6: AssetManager Reload After Unload
 """
 
 import io
-from unittest.mock import MagicMock
 
 from hypothesis import given, settings
 from hypothesis import strategies as st
@@ -26,7 +32,7 @@ def _make_png_bytes(w: int, h: int) -> bytes:
 def _make_manager_with_mock_fs(png_bytes: bytes):
     """Return (manager, mock_fs) with mock_fs.read_file returning png_bytes."""
     from engine.asset.manager import AssetManager
-    mock_fs = MagicMock()
+    mock_fs = MockObject()
     mock_fs.read_file.return_value = png_bytes
     manager = AssetManager()
     manager.filesystem = mock_fs

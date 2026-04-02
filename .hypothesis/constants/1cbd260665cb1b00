@@ -1,0 +1,4 @@
+# file: /workspace/game/ai/archetypes.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.8, 1.0, 1.5, 2.0, 8.0, 10.0, 12.0, 20.0, 30.0, 40.0, 50.0, 60.0, 80.0, 100.0, 120.0, 150.0, 200.0, 250.0, 300.0, 400.0, 'AIArchetype', 'MeleeChaser', 'RangedKiter', 'TankCharger', 'attack_cooldown', 'attack_damage', 'attack_range', 'chase_speed', 'detection_range', 'max_hp']

@@ -1,0 +1,4 @@
+# file: /workspace/world/components/combatant_component.py
+# hypothesis_version: 6.151.10
+
+[1.0, 'enemy', 'faction', 'is_targetable', 'neutral', 'player', 'team', 'threat_value']

@@ -7,7 +7,6 @@ It manages the game flow and player interaction.
 Layer: 4 (Game)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
 from game.gamemode import GameMode

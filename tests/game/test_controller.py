@@ -6,7 +6,6 @@ Controller handles input and controls an Actor.
 Layer: 4 (Game)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
 from game.controller import Controller, PlayerController

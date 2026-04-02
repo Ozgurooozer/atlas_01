@@ -7,7 +7,6 @@ Layer 4 (Game/Input), depends on core.object.
 TDD: RED phase — implementation does not exist yet.
 """
 from __future__ import annotations
-import pytest
 
 
 class FakeInputType:

@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/texture.py
+# hypothesis_version: 6.151.10
+
+[0.0, 1.0, 255, 'PNG', 'RGBA', 'Texture', 'UVRegion', 'height', 'texture', 'u0', 'u1', 'u2', 'v0', 'v1', 'v2', 'width', 'x', 'y']

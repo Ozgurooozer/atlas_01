@@ -10,7 +10,7 @@ Dependencies: engine.renderer.texture, engine.renderer.animation
 
 from __future__ import annotations
 import json
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from engine.renderer.texture import Texture, UVRegion
 from engine.renderer.animation import Animation, AnimationFrame

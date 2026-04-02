@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/ssao.py
+# hypothesis_version: 6.151.10
+
+[-1.0, 0.0, 0.025, 0.1, 0.5, 0.9, 1.0, 4.0, 255, '16f', '2f 2f', '_fsq_vbo', 'a_position', 'a_texcoord', 'get_color_texture', 'get_depth_texture', 'u_bias', 'u_depth', 'u_noise', 'u_noise_scale', 'u_normal', 'u_radius', 'u_ssao']

@@ -7,7 +7,6 @@ Components inherit from Object and provide modular functionality.
 Layer: 3 (World)
 """
 
-import pytest
 from core.object import Object
 from core.guid import GUID
 from core.reflection import reflect, get_properties, get_property_value, set_property_value

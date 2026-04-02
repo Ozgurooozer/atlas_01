@@ -12,7 +12,6 @@ Sahne içeriği:
 - 10 frame döngüsü (begin_frame → draw → end_frame → present)
 """
 import warnings
-import pytest
 from hal.headless import HeadlessGPU
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.render_config import RenderConfig
@@ -20,7 +19,7 @@ from engine.renderer.camera import Camera
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
 from engine.renderer.batch import SpriteBatch
-from engine.renderer.light import Light2D, LightRenderer, LightType
+from engine.renderer.light import Light2D, LightRenderer
 from core.vec import Vec2
 
 

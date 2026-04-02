@@ -5,10 +5,10 @@ Provides 3D-positioned particles with velocity, color gradients, and emission sh
 Layer: 2 (Engine)
 Dependencies: core.vec, core.color
 """
-from typing import List, Optional, Tuple
-from math import sqrt, sin, cos, pi, radians
+from typing import List, Optional
+from math import sin, cos, pi, radians
 import random
-from core.vec import Vec2, Vec3
+from core.vec import Vec3
 from core.color import Color
 
 

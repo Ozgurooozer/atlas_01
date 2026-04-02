@@ -1,4 +1,3 @@
-import pytest
 from world.transform import TransformComponent
 
 def test_transform_defaults():

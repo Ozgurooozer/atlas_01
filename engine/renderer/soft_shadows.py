@@ -5,7 +5,7 @@ Provides soft shadow casting with Gaussian blur and height-based shadow offset.
 Layer: 2 (Engine)
 Dependencies: core.vec, engine.renderer.normal_lighting
 """
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 from math import exp, sqrt
 from core.vec import Vec2
 

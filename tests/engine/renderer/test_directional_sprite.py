@@ -1,6 +1,4 @@
 """Tests for directional sprite system."""
-import pytest
-import math
 from core.vec import Vec2
 
 
@@ -120,7 +118,6 @@ class TestBillboardSprite:
     def test_billboard_face_camera(self):
         """Billboard should calculate rotation to face camera."""
         from engine.renderer.directional_sprite import BillboardSprite, BillboardManager
-        from core.vec import Vec3
         
         bb = BillboardSprite(texture="enemy.png")
         bb.position = Vec2(100, 100)

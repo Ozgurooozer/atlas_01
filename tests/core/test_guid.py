@@ -5,7 +5,6 @@ Tests for Global Unique Identifier system.
 GUIDs are used to uniquely identify every object in the engine.
 """
 
-import pytest
 
 
 class TestGUID:

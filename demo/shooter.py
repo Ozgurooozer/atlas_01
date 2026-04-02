@@ -28,9 +28,7 @@ from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
 from engine.renderer.camera import Camera
 from world.world import World
-from world.actor import Actor
-from world.component import Component
-from hal.headless import HeadlessGPU, HeadlessWindow
+from hal.headless import HeadlessGPU
 
 
 class BulletPool:

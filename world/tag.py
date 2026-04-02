@@ -6,7 +6,7 @@ Layer: 3 (World)
 Dependencies: core.object
 """
 from typing import Dict, Set, List, Any
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)

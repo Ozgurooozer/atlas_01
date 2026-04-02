@@ -1,5 +1,4 @@
 """Ultra Simple 2.5D Demo - Black & White Squares."""
-import sys
 import math
 
 try:

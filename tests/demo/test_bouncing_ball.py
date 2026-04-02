@@ -12,7 +12,6 @@ Tests:
 - Score tracking
 """
 
-import pytest
 from core.vec import Vec2
 
 
@@ -111,7 +110,6 @@ class TestDemoGamePhysics:
     def test_gravity_applied(self):
         """Gravity should affect ball."""
         from demo.bouncing_ball import BouncingBallGame
-        from engine.physics.physics import Physics2D
 
         game = BouncingBallGame()
         game.initialize()

@@ -6,8 +6,8 @@ fixed timestep for consistent physics/logic updates.
 Layer: 2 (Engine)
 Dependencies: None (Core)
 """
-from enum import Enum, auto
-from typing import Dict, List, Callable, Any, Optional
+from enum import Enum
+from typing import Dict, List, Callable, Any
 from dataclasses import dataclass
 
 

@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/renderer.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.1, 1.0, 255.0, 600, 800, 'Camera', 'Engine', 'GBuffer', 'IFramebuffer', 'IGPUDevice', 'LightRenderer', 'PostProcessStack', 'RenderConfig', 'SSAOPass', 'Sprite', 'Texture', 'color', 'falloff', 'intensity', 'normal_map', 'position', 'radius', 'renderer']

@@ -21,11 +21,10 @@ import pyglet
 from pyglet import gl
 from pyglet.window import key
 
-from engine.renderer.shader import Shader, ShaderLibrary, SPRITE_VERTEX_SRC, SPRITE_FRAGMENT_SRC
-from engine.renderer.animation import Animation, AnimationPlayer
+from engine.renderer.animation import AnimationPlayer
 from engine.renderer.spritesheet import Spritesheet
-from engine.renderer.light import Light2D, LightRenderer, LightType
-from engine.renderer.texture import Texture, UVRegion
+from engine.renderer.light import Light2D, LightType
+from engine.renderer.texture import Texture
 from core.vec import Vec2
 from core.color import Color
 

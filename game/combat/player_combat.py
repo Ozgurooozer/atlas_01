@@ -9,7 +9,7 @@ Dependencies: scripting.statemachine, world components
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from scripting.statemachine import State, StateMachine
 from core.vec import Vec2
@@ -22,8 +22,7 @@ from world.components.combat_state_component import CombatStateComponent
 from world.transform import TransformComponent
 
 if TYPE_CHECKING:
-    from world.components.combatant_component import CombatantComponent
-    from engine.input.input_handler import InputHandler
+    pass
 
 
 # ---------------------------------------------------------------------------

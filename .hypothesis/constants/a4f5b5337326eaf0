@@ -1,0 +1,4 @@
+# file: /workspace/world/components/script_component.py
+# hypothesis_version: 6.151.10
+
+['blackboard', 'on_destroy', 'on_start', 'on_tick']

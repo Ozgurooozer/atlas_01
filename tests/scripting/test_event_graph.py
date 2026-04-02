@@ -1,5 +1,4 @@
 """Tests for event graph system."""
-import pytest
 from scripting.event_graph import (
     Pin, GraphNode, EventNode, ActionGraphNode, BranchNode, EventGraph
 )

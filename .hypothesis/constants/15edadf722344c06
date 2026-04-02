@@ -1,0 +1,4 @@
+# file: /workspace/game/run/encounter.py
+# hypothesis_version: 6.151.10
+
+[0.0, 1.0, 1.5, 2.0, 100, 500, 750, 'Encounter', 'EncounterGenerator', 'ThreatBudget', 'WaveSystem', 'budget', 'count', 'current_wave', 'enemy_spawns', 'enemy_type', 'melee_chaser', 'on_enter', 'position', 'ranged_kiter', 'tank_charger', 'timer_delay', 'trigger_type', 'used', 'waves']

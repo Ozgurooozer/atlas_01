@@ -26,8 +26,7 @@ from engine.renderer.texture import Texture
 from engine.renderer.camera import Camera
 from world.world import World
 from world.actor import Actor
-from world.component import Component
-from hal.headless import HeadlessGPU, HeadlessWindow
+from hal.headless import HeadlessGPU
 
 
 class PlayerActor(Actor):
@@ -780,7 +779,6 @@ class PlatformerGame:
             duration: Total duration in seconds.
             dt: Delta time per frame.
         """
-        import time
 
         if not self._initialized:
             self.initialize()

@@ -9,7 +9,7 @@ Dependencies: core.object
 """
 from __future__ import annotations
 from enum import Enum, auto
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 from core.object import Object
 

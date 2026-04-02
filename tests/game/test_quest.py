@@ -1,5 +1,4 @@
 """Tests for quest system."""
-import pytest
 from game.quest.quest import Quest, QuestObjective, QuestStatus, QuestManager
 
 

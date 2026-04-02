@@ -1,6 +1,5 @@
 """Tests for Hierarchy panel."""
 
-import pytest
 from editor.main import Editor, EditorPanel
 
 

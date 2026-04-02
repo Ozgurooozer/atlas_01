@@ -1,6 +1,4 @@
-import pytest
 from world.components.physics_component import PhysicsComponent
-from world.transform import TransformComponent
 from world.actor import Actor
 
 class MockPhysics:

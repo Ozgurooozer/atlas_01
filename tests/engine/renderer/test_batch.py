@@ -1,9 +1,7 @@
 """Tests for SpriteBatch class."""
 
-import pytest
 from engine.renderer.texture import Texture
 from engine.renderer.sprite import Sprite
-from core.vec import Vec2
 
 
 class TestSpriteBatch:

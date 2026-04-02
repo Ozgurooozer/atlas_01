@@ -1,5 +1,4 @@
 """Test coverage checker - ensures every module has a corresponding test file."""
-import os
 from pathlib import Path
 
 from base_checker import BaseChecker, CheckResult

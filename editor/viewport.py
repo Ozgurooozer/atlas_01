@@ -14,7 +14,6 @@ from typing import Optional, Tuple, TYPE_CHECKING
 from editor.main import EditorPanel
 
 if TYPE_CHECKING:
-    from world.actor import Actor
     from editor.main import Editor
 
 

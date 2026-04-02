@@ -1,4 +1,3 @@
-import pytest
 from hypothesis import given, strategies as st
 from world.components.physics_component import PhysicsComponent
 from world.transform import TransformComponent

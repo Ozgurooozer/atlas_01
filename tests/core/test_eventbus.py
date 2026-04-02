@@ -5,7 +5,6 @@ Tests for publish/subscribe event system.
 EventBus enables loose coupling between engine components.
 """
 
-import pytest
 
 
 class TestEventBusCreation:

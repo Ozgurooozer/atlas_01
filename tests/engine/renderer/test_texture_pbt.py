@@ -66,7 +66,6 @@ def test_texture_round_trip(w, h):
     Texture.from_file must produce a texture with the same width, height, and
     pixel data.
     """
-    from PIL import Image
     from engine.renderer.texture import Texture
 
     # Build deterministic RGBA pixel data (pattern based on position)

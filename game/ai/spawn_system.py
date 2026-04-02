@@ -10,18 +10,14 @@ Dependencies: core.object, world.actor, game.ai.archetypes, game.ai.enemy_ai
 from __future__ import annotations
 
 import math
-import time
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from core.object import Object
 from core.vec import Vec2
 from game.ai.archetypes import (
     AIArchetype,
-    MeleeChaserArchetype,
-    RangedKiterArchetype,
-    TankChargerArchetype,
 )
 
 if TYPE_CHECKING:

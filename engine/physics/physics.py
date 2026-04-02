@@ -10,7 +10,7 @@ Dependencies: engine.subsystem
 
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Optional, Tuple, Dict, TYPE_CHECKING
+from typing import Tuple, Dict, TYPE_CHECKING
 
 from engine.subsystem import ISubsystem
 

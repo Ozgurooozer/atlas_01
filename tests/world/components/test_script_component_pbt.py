@@ -1,4 +1,3 @@
-import pytest
 import logging
 from hypothesis import given, strategies as st
 from world.components.script_component import ScriptComponent

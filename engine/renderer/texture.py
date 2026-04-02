@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 from core.object import Object
 
 if TYPE_CHECKING:
-    from PIL import Image
+    pass
 
 
 class UVRegion:

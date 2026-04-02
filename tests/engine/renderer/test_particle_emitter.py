@@ -1,8 +1,5 @@
-import pytest
 from engine.renderer.particle import ParticleEmitter
 from engine.renderer.texture import Texture
-from engine.renderer.batch import SpriteBatch
-from unittest.mock import MagicMock
 
 def test_particle_emitter_lifecycle():
     """Gereksinim 5.4, 5.5: Süresi dolan parçacıklar kaldırılır."""

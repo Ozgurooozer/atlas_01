@@ -7,9 +7,9 @@ Layer: 4 (Game/Combat)
 Dependencies: game.combat.model, core.eventbus
 """
 from __future__ import annotations
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING
 from core.object import Object
-from game.combat.model import StatusEffectType, CombatEventType
+from game.combat.model import StatusEffectType
 
 if TYPE_CHECKING:
     from world.actor import Actor

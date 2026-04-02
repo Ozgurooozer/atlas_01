@@ -5,7 +5,7 @@ Layer: 4 (Game)
 Dependencies: core.object
 """
 from __future__ import annotations
-from typing import Any, Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional
 from core.object import Object
 
 

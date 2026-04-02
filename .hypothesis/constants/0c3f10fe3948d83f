@@ -1,0 +1,4 @@
+# file: /workspace/game/run/room.py
+# hypothesis_version: 6.151.10
+
+[999999, 'COMBAT', 'RoomGraph', 'current_index', 'is_cleared', 'is_visited', 'room_id', 'room_type', 'rooms', 'seed', 'template_height', 'template_name', 'template_width']

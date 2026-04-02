@@ -1,0 +1,4 @@
+# file: /workspace/game/gamemode.py
+# hypothesis_version: 6.151.10
+
+['World', 'is_running']

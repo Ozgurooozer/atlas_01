@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/render_logger.py
+# hypothesis_version: 6.151.10
+
+['[Render] %s', '[Render] %s: %s', 'engine.renderer']

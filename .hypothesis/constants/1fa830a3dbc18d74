@@ -1,0 +1,4 @@
+# file: /workspace/game/save/save.py
+# hypothesis_version: 6.151.10
+
+['IFilesystem', 'SaveData', 'SaveSystem', 'data', 'saves', 'slot', 'timestamp', 'version']

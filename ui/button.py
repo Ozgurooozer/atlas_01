@@ -5,7 +5,7 @@ Provides clickable button with state management.
 Layer: 6 (UI)
 Dependencies: core.color
 """
-from enum import Enum, auto
+from enum import Enum
 from typing import Callable, List
 from core.color import Color
 

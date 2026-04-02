@@ -1,0 +1,4 @@
+# file: /workspace/game/inventory/item.py
+# hypothesis_version: 6.151.10
+
+[0.0, 'Item', 'armor', 'consumable', 'description', 'item_type', 'max_stack', 'misc', 'quest', 'stackable', 'value', 'weapon', 'weight']

@@ -1,4 +1,3 @@
-import pytest
 from world.components.script_component import ScriptComponent
 from world.actor import Actor
 

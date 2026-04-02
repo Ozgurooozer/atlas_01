@@ -1,5 +1,4 @@
 """Tests for post-process stack system."""
-import pytest
 from core.color import Color
 
 

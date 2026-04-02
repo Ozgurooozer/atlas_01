@@ -1,6 +1,5 @@
 """Tests for Camera class."""
 
-import pytest
 from core.vec import Vec2
 
 

@@ -1,0 +1,4 @@
+# file: /workspace/game/input/input_buffer.py
+# hypothesis_version: 6.151.10
+
+[0.2, 'InputBuffer', 'entries', 'max_size', 'timeout', 'timestamp', 'type']

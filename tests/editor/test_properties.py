@@ -1,6 +1,5 @@
 """Tests for Properties panel."""
 
-import pytest
 from editor.main import Editor, EditorPanel
 
 

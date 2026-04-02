@@ -13,7 +13,6 @@ Tests:
 - Camera follow
 """
 
-import pytest
 from core.vec import Vec2
 
 

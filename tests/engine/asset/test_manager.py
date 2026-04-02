@@ -7,7 +7,6 @@ Uses MemoryFilesystem for CI compatibility.
 Layer: 2 (Engine)
 """
 
-import pytest
 from engine.subsystem import ISubsystem
 from engine.asset.manager import IAssetManager, AssetManager
 from hal.headless import MemoryFilesystem

@@ -19,7 +19,7 @@ from engine.renderer.camera import Camera
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
 from engine.renderer.batch import SpriteBatch
-from engine.renderer.light import Light2D, LightRenderer, LightType
+from engine.renderer.light import Light2D, LightRenderer
 from engine.renderer.isometric import IsometricProjection
 from core.vec import Vec2
 
