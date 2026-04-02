@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/animation.py
+# hypothesis_version: 6.151.10
+
+[0.0, 1.0, 12.0, 'None', 'loop', 'one_shot', 'ping_pong']

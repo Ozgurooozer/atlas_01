@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/shadow_map.py
+# hypothesis_version: 6.151.10
+
+[-2.0, -1.0, 0.0, 1.0, 2.0, 512, '16f', '2f', '2f 2f', '8f', '_fsq_vbo', 'a_position', 'a_texcoord', 'get_color_texture', 'get_depth_texture', 'u_blur_radius', 'u_image', 'u_light_pos', 'u_light_radius', 'u_projection', 'u_shadow_map', 'u_texel_size', 'u_view']

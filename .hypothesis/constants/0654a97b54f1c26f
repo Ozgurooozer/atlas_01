@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/particle.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.5, 1.0, 2.0, 8.0, 10.0, 255, 360, 1000, 'angular_velocity', 'color', 'max_life', 'rotation', 'size', 'velocity']

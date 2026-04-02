@@ -7,26 +7,36 @@ color tinting, and texture regions.
 
 Layer: 2 (Engine)
 Dependencies: core.object, core.vec, engine.renderer.texture
+
+This module re-exports the composed Sprite class.
 """
 
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, Tuple, Union, TYPE_CHECKING
 
-from core.object import Object
 from core.vec import Vec2
+from engine.renderer.sprite_base import SpriteBase
+from engine.renderer.sprite_appearance import SpriteAppearanceMixin
+from engine.renderer.sprite_bounds import SpriteBoundsMixin
+from engine.renderer.sprite_serialization import SpriteSerializationMixin
 
 if TYPE_CHECKING:
     from engine.renderer.texture import Texture
-    from engine.renderer.material import Material
 
 
-class Sprite(Object):
+class Sprite(SpriteBase, SpriteAppearanceMixin, SpriteBoundsMixin, SpriteSerializationMixin):
     """
     Renderable sprite with transform and appearance properties.
 
     A Sprite combines a Texture with position, scale, rotation,
     and color properties for rendering.
+
+    Composition of:
+        - SpriteBase: Transform (position, scale, rotation, visibility)
+        - SpriteAppearanceMixin: Appearance (texture, color, material, UV)
+        - SpriteBoundsMixin: Bounds calculations (width, height, collision)
+        - SpriteSerializationMixin: Save/load support
 
     Attributes:
         texture: The texture to render.
@@ -59,386 +69,15 @@ class Sprite(Object):
             region: Optional texture region dict.
             name: Optional sprite name.
         """
-        super().__init__(name=name or "Sprite")
-        self._texture: Optional[Texture] = texture
-        self._region: Optional[Dict[str, Any]] = region
-
-        # Position
-        if position is None:
-            self._position = Vec2(0.0, 0.0)
-        elif isinstance(position, Vec2):
-            self._position = position.copy()
-        else:
-            self._position = Vec2(position[0], position[1])
-
-        # Scale
-        self._scale_x: float = scale
-        self._scale_y: float = scale
-
-        # Rotation in degrees
-        self._rotation: float = rotation
-
-        # Color tint (RGBA, 0-255)
-        self._color: Tuple[int, int, int, int] = (255, 255, 255, 255)
-
-        # Visibility
-        self._visible: bool = True
-
-        # Z-order
-        self._z_index: int = 0
-
-        # Anchor point (0-1, default center)
-        self._anchor_x: float = 0.5
-        self._anchor_y: float = 0.5
-
-        # Flip flags
-        self._flip_x: bool = False
-        self._flip_y: bool = False
-
-        # Material and Normal Map
-        self._material: Optional["Material"] = None
-        self._normal_map: Optional[int] = None
-
-        # UV region for texture atlases / tilemaps
-        self._uv_offset: Tuple[float, float] = (0.0, 0.0)
-        self._uv_size: Tuple[float, float] = (1.0, 1.0)
-
-    @property
-    def texture(self) -> Optional[Texture]:
-        """Get texture."""
-        return self._texture
-
-    @texture.setter
-    def texture(self, value: Optional[Texture]) -> None:
-        """Set texture."""
-        self._texture = value
-
-    @property
-    def region(self) -> Optional[Dict[str, Any]]:
-        """Get texture region."""
-        return self._region
-
-    @region.setter
-    def region(self, value: Optional[Dict[str, Any]]) -> None:
-        """Set texture region."""
-        self._region = value
-
-    @property
-    def position(self) -> Vec2:
-        """Get position."""
-        return self._position
-
-    @position.setter
-    def position(self, value: Union[Vec2, Tuple[float, float]]) -> None:
-        """Set position."""
-        if isinstance(value, Vec2):
-            self._position = value.copy()
-        else:
-            self._position = Vec2(value[0], value[1])
-
-    @property
-    def scale_x(self) -> float:
-        """Get X scale."""
-        return self._scale_x
-
-    @scale_x.setter
-    def scale_x(self, value: float) -> None:
-        """Set X scale."""
-        self._scale_x = value
-
-    @property
-    def scale_y(self) -> float:
-        """Get Y scale."""
-        return self._scale_y
-
-    @scale_y.setter
-    def scale_y(self, value: float) -> None:
-        """Set Y scale."""
-        self._scale_y = value
-
-    @property
-    def rotation(self) -> float:
-        """Get rotation in degrees."""
-        return self._rotation
-
-    @rotation.setter
-    def rotation(self, value: float) -> None:
-        """Set rotation in degrees."""
-        self._rotation = value
-
-    @property
-    def color(self) -> Tuple[int, int, int, int]:
-        """Get color tint."""
-        return self._color
-
-    @color.setter
-    def color(self, value: Tuple[int, int, int, int]) -> None:
-        """Set color tint."""
-        self._color = value
-
-    @property
-    def alpha(self) -> float:
-        """Get alpha (0-1)."""
-        return self._color[3] / 255.0
-
-    @alpha.setter
-    def alpha(self, value: float) -> None:
-        """Set alpha (0-1)."""
-        r, g, b, _ = self._color
-        self._color = (r, g, b, int(value * 255))
-
-    @property
-    def visible(self) -> bool:
-        """Get visibility."""
-        return self._visible
-
-    @visible.setter
-    def visible(self, value: bool) -> None:
-        """Set visibility."""
-        self._visible = value
-
-    @property
-    def z_index(self) -> int:
-        """Get z-index."""
-        return self._z_index
-
-    @z_index.setter
-    def z_index(self, value: int) -> None:
-        """Set z-index."""
-        self._z_index = value
-
-    @property
-    def anchor_x(self) -> float:
-        """Get X anchor."""
-        return self._anchor_x
-
-    @anchor_x.setter
-    def anchor_x(self, value: float) -> None:
-        """Set X anchor."""
-        self._anchor_x = value
-
-    @property
-    def anchor_y(self) -> float:
-        """Get Y anchor."""
-        return self._anchor_y
-
-    @anchor_y.setter
-    def anchor_y(self, value: float) -> None:
-        """Set Y anchor."""
-        self._anchor_y = value
-
-    @property
-    def flip_x(self) -> bool:
-        """Get X flip."""
-        return self._flip_x
-
-    @flip_x.setter
-    def flip_x(self, value: bool) -> None:
-        """Set X flip."""
-        self._flip_x = value
-
-    @property
-    def flip_y(self) -> bool:
-        """Get Y flip."""
-        return self._flip_y
-
-    @flip_y.setter
-    def flip_y(self, value: bool) -> None:
-        """Set Y flip."""
-        self._flip_y = value
-
-    @property
-    def material(self) -> Optional["Material"]:
-        """Get material."""
-        return self._material
-
-    @material.setter
-    def material(self, value: Optional["Material"]) -> None:
-        """Set material."""
-        self._material = value
-
-    @property
-    def normal_map(self) -> Optional[int]:
-        """Get normal map texture ID."""
-        return self._normal_map
-
-    @normal_map.setter
-    def normal_map(self, value: Optional[int]) -> None:
-        """Set normal map texture ID."""
-        self._normal_map = value
-
-    @property
-    def uv_offset(self) -> Tuple[float, float]:
-        """Get UV offset (normalized 0-1) for texture atlas sampling."""
-        return self._uv_offset
-
-    @uv_offset.setter
-    def uv_offset(self, value: Tuple[float, float]) -> None:
-        """Set UV offset."""
-        self._uv_offset = value
-
-    @property
-    def uv_size(self) -> Tuple[float, float]:
-        """Get UV size (normalized 0-1) for texture atlas sampling."""
-        return self._uv_size
-
-    @uv_size.setter
-    def uv_size(self, value: Tuple[float, float]) -> None:
-        """Set UV size."""
-        self._uv_size = value
-
-    def set_uv_region(self, u0: float, v0: float, u1: float, v1: float) -> None:
-        """
-        Set UV region directly from normalized coordinates.
+        # Initialize base (transform)
+        SpriteBase.__init__(self, position=position, rotation=rotation, scale=scale, name=name)
         
-        Args:
-            u0: Left U (0-1)
-            v0: Top V (0-1)
-            u1: Right U (0-1)
-            v1: Bottom V (0-1)
-        """
-        self._uv_offset = (u0, v0)
-        self._uv_size = (u1 - u0, v1 - v0)
-
-    @property
-    def width(self) -> float:
-        """Get sprite width (including scale)."""
-        base_width = self._get_base_width()
-        return base_width * abs(self._scale_x)
-
-    @property
-    def height(self) -> float:
-        """Get sprite height (including scale)."""
-        base_height = self._get_base_height()
-        return base_height * abs(self._scale_y)
-
-    def _get_base_width(self) -> int:
-        """Get base width from texture or region."""
-        if self._region:
-            return self._region['width']
-        if self._texture:
-            return self._texture.width
-        return 0
-
-    def _get_base_height(self) -> int:
-        """Get base height from texture or region."""
-        if self._region:
-            return self._region['height']
-        if self._texture:
-            return self._texture.height
-        return 0
-
-    def get_bounds(self) -> Dict[str, float]:
-        """
-        Get axis-aligned bounding box.
-
-        Returns:
-            Dictionary with x, y, width, height.
-        """
-        w = self.width
-        h = self.height
-
-        # Offset by anchor
-        offset_x = w * self._anchor_x
-        offset_y = h * self._anchor_y
-
-        return {
-            'x': self._position.x - offset_x,
-            'y': self._position.y - offset_y,
-            'width': w,
-            'height': h
-        }
-
-    def contains_point(self, x: float, y: float) -> bool:
-        """
-        Check if point is inside sprite bounds.
-
-        Args:
-            x: Point X coordinate.
-            y: Point Y coordinate.
-
-        Returns:
-            True if point is inside sprite.
-        """
-        bounds = self.get_bounds()
-
-        return (
-            bounds['x'] <= x <= bounds['x'] + bounds['width'] and
-            bounds['y'] <= y <= bounds['y'] + bounds['height']
-        )
-
-    def translate(self, dx: float, dy: float) -> None:
-        """
-        Move sprite by offset.
-
-        Args:
-            dx: X offset.
-            dy: Y offset.
-        """
-        self._position = Vec2(
-            self._position.x + dx,
-            self._position.y + dy
-        )
-
-    def rotate(self, degrees: float) -> None:
-        """
-        Rotate sprite by angle.
-
-        Args:
-            degrees: Angle to add in degrees.
-        """
-        self._rotation += degrees
-
-    def scale_by(self, factor: float) -> None:
-        """
-        Scale sprite uniformly.
-
-        Args:
-            factor: Scale factor to multiply.
-        """
-        self._scale_x *= factor
-        self._scale_y *= factor
-
-    def set_scale(self, value: float) -> None:
-        """
-        Set uniform scale.
-
-        Args:
-            value: New scale value.
-        """
-        self._scale_x = value
-        self._scale_y = value
-
-    def serialize(self) -> Dict[str, Any]:
-        """Serialize sprite data."""
-        data = super().serialize()
-        data['position_x'] = self._position.x
-        data['position_y'] = self._position.y
-        data['scale_x'] = self._scale_x
-        data['scale_y'] = self._scale_y
-        data['rotation'] = self._rotation
-        data['color'] = self._color
-        data['visible'] = self._visible
-        data['z_index'] = self._z_index
-        return data
-
-    def deserialize(self, data: Dict[str, Any]) -> None:
-        """Deserialize sprite data."""
-        super().deserialize(data)
-        if 'position_x' in data:
-            self._position = Vec2(data['position_x'], data.get('position_y', 0))
-        if 'scale_x' in data:
-            self._scale_x = data['scale_x']
-        if 'scale_y' in data:
-            self._scale_y = data['scale_y']
-        if 'rotation' in data:
-            self._rotation = data['rotation']
-        if 'color' in data:
-            self._color = tuple(data['color'])
-        if 'visible' in data:
-            self._visible = data['visible']
-        if 'z_index' in data:
-            self._z_index = data['z_index']
+        # Initialize appearance
+        SpriteAppearanceMixin.__init__(self)
+        
+        # Set texture and region after appearance init
+        self._texture = texture
+        self._region = region
 
     def __repr__(self) -> str:
         """String representation."""

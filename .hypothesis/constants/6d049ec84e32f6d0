@@ -1,0 +1,4 @@
+# file: /workspace/world/components/combat_state_component.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.01, 5.0, 'is_stunned', 'knockback_x', 'knockback_y', 'status_effects', 'stun_timer']
