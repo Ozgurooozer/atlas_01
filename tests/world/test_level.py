@@ -3,10 +3,50 @@
 Test-First Development for Level management
 """
 import pytest
-from unittest.mock import MagicMock
 from world.level import Level, LevelManager, SpawnPoint, TileMap
 from world.actor import Actor
 from core.vec import Vec3
+
+
+class MockObject:
+    """Simple mock for testing."""
+
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+    def __getattr__(self, name):
+        def mock_method(*args, **kwargs):
+            self.call_count += 1
+            self.call_args = (args, kwargs)
+            return None
+
+        return mock_method
+
+
+class MockCallback:
+    """Simple mock for testing."""
+
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+    def __call__(self, *args, **kwargs):
+        self.call_count += 1
+        self.call_args = (args, kwargs)
+
+
+class MockActor(Actor):
+    """Simple actor mock for testing."""
+
+    def __init__(self):
+        super().__init__()
+        self.tick_called = False
+        self.tick_dt = None
+
+    def tick(self, dt):
+        self.tick_called = True
+        self.tick_dt = dt
 
 
 class TestSpawnPoint:
@@ -115,7 +155,7 @@ class TestLevel:
     def test_add_actor(self):
         """Test adding actor to level."""
         level = Level()
-        actor = MagicMock(spec=Actor)
+        actor = MockActor()
         
         level.add_actor(actor)
         
@@ -124,7 +164,7 @@ class TestLevel:
     def test_remove_actor(self):
         """Test removing actor from level."""
         level = Level()
-        actor = MagicMock(spec=Actor)
+        actor = MockActor()
         level.add_actor(actor)
         
         level.remove_actor(actor)
@@ -179,7 +219,7 @@ class TestLevel:
     def test_load_calls_on_load(self):
         """Test load calls on_load callback."""
         level = Level()
-        on_load = MagicMock()
+        on_load = MockCallback()
         level.on_load = on_load
         
         level.load()
@@ -189,7 +229,7 @@ class TestLevel:
     def test_update(self):
         """Test update ticks actors."""
         level = Level()
-        actor = MagicMock(spec=Actor)
+        actor = MockActor()
         level.add_actor(actor)
         level.load()
         
@@ -200,7 +240,7 @@ class TestLevel:
     def test_update_not_loaded(self):
         """Test update does nothing when not loaded."""
         level = Level()
-        actor = MagicMock(spec=Actor)
+        actor = MockActor()
         level.add_actor(actor)
         
         level.update(0.016)
@@ -210,9 +250,9 @@ class TestLevel:
     def test_get_actors_by_tag(self):
         """Test getting actors by tag."""
         level = Level()
-        actor1 = MagicMock(spec=Actor)
+        actor1 = MockActor()
         actor1.tags = ["enemy"]
-        actor2 = MagicMock(spec=Actor)
+        actor2 = MockActor()
         actor2.tags = ["player"]
         
         level.add_actor(actor1)
@@ -226,9 +266,9 @@ class TestLevel:
     def test_get_all_actors_with_tag(self):
         """Test getting all actors with specific tag."""
         level = Level()
-        actor1 = MagicMock(spec=Actor)
+        actor1 = MockActor()
         actor1.tags = ["enemy", "boss"]
-        actor2 = MagicMock(spec=Actor)
+        actor2 = MockActor()
         actor2.tags = ["enemy"]
         
         level.add_actor(actor1)
@@ -243,8 +283,8 @@ class TestLevel:
     def test_clear_actors(self):
         """Test clearing all actors."""
         level = Level()
-        actor1 = MagicMock(spec=Actor)
-        actor2 = MagicMock(spec=Actor)
+        actor1 = MockActor()
+        actor2 = MockActor()
         level.add_actor(actor1)
         level.add_actor(actor2)
         
@@ -317,7 +357,7 @@ class TestLevelManager:
         """Test update propagates to current level."""
         manager = LevelManager()
         level = Level(name="test")
-        level.update = MagicMock()
+        level.update = MockObject()
         manager.register_level(level)
         manager.load_level("test")
         
@@ -329,8 +369,8 @@ class TestLevelManager:
         """Test reloading current level."""
         manager = LevelManager()
         level = Level(name="test")
-        level.load = MagicMock()
-        level.unload = MagicMock()
+        level.load = MockObject()
+        level.unload = MockObject()
         manager.register_level(level)
         manager.load_level("test")
         

@@ -1,11 +1,10 @@
-from unittest.mock import MagicMock
 from engine.renderer.shadow_map import ShadowMapRenderer
 from engine.renderer.light import LightRenderer, Light2D
 from hal.interfaces import IGPUDevice
 
 def test_shadow_map_renderer_lifecycle():
     """Gereksinim 1.2.4: ShadowMapRenderer kaynak yönetimi testi."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     smr = ShadowMapRenderer(gpu, resolution=256)
     
     # Resize testi
@@ -17,7 +16,7 @@ def test_shadow_map_renderer_lifecycle():
 
 def test_light_renderer_shadow_toggle():
     """Gereksinim 1.4.1, 1.4.3: shadows_enabled toggle testi."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     lr = LightRenderer(gpu, 800, 600)
     
     # Kapalıyken shadow renderer oluşmamalı
@@ -32,7 +31,7 @@ def test_light_renderer_shadow_toggle():
 
 def test_light_renderer_max_lights_preserved():
     """Gereksinim 1.5.3: shadows_enabled=False iken MAX_LIGHTS sınırı korunur."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     lr = LightRenderer(gpu, 800, 600)
     lr.shadows_enabled = False
     

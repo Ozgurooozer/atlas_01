@@ -5,7 +5,6 @@ get_visible_point_lights() — private _lights erişimi yerine kullanılacak API
 PostProcessPass fail-fast uyarısı.
 """
 import warnings
-from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D, LightType
 from engine.renderer.postprocess_stack import (
     PostProcessPass, BloomPass, ColorGradingPass, VignettePass, FXAAPass
@@ -13,12 +12,38 @@ from engine.renderer.postprocess_stack import (
 from hal.interfaces import IGPUDevice
 
 
-# ---------------------------------------------------------------------------
-# LightRenderer.get_visible_point_lights()
-# ---------------------------------------------------------------------------
+class MockObject:
+    """Simple mock for testing."""
+
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+    def __getattr__(self, name):
+        def mock_method(*args, **kwargs):
+            self.call_count += 1
+            self.call_args = (args, kwargs)
+            return None
+
+        return mock_method
+
+
+class MockGPU:
+    """Mock GPU device for renderer tests."""
+
+    def __init__(self):
+        self.call_log = []
+
+    def __getattr__(self, name):
+        def mock_method(*args, **kwargs):
+            self.call_log.append((name, args, kwargs))
+            return None
+
+        return mock_method
+
 
 def _make_lr():
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     return LightRenderer(gpu, 800, 600)
 
 
@@ -68,14 +93,14 @@ def test_get_visible_point_lights_default_max_8():
 # ---------------------------------------------------------------------------
 
 def _make_fbo():
-    fbo = MagicMock()
+    fbo = MockObject()
     fbo.width = 800
     fbo.height = 600
     return fbo
 
 
 def test_unimplemented_pass_warns_when_enabled():
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     fbo_in = _make_fbo()
     fbo_out = _make_fbo()
 
@@ -93,7 +118,7 @@ def test_unimplemented_pass_warns_when_enabled():
 
 
 def test_unimplemented_pass_no_warn_when_disabled():
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     fbo_in = _make_fbo()
     fbo_out = _make_fbo()
 
@@ -126,7 +151,7 @@ def test_fxaa_pass_disabled_by_default():
 
 
 def test_bloom_warns_if_force_enabled():
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     fbo_in = _make_fbo()
     fbo_out = _make_fbo()
 

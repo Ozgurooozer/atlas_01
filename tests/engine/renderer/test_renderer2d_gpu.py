@@ -11,7 +11,6 @@ Property 8: Invisible Sprite Skipped
   **Validates: Requirements 7.4**
 """
 
-from unittest.mock import MagicMock
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -19,6 +18,22 @@ from hal.headless import HeadlessGPU
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
+
+class TrackedHeadlessGPU(HeadlessGPU):
+    """HeadlessGPU with call tracking for tests."""
+
+    def __init__(self):
+        super().__init__()
+        self.create_texture_call_count = 0
+        self.draw_call_count = 0
+
+    def create_texture(self, *args, **kwargs):
+        self.create_texture_call_count += 1
+        return super().create_texture(*args, **kwargs)
+
+    def draw(self, *args, **kwargs):
+        self.draw_call_count += 1
+        return super().draw(*args, **kwargs)
 
 
 def _make_renderer():
@@ -53,10 +68,7 @@ def test_texture_upload_idempotence(n_calls):
     calls must not re-upload the same texture.
     """
     renderer = Renderer2D()
-    gpu = HeadlessGPU()
-    # Wrap create_texture with a spy to count calls
-    original_create = gpu.create_texture
-    gpu.create_texture = MagicMock(side_effect=original_create)
+    gpu = TrackedHeadlessGPU()
     renderer.gpu_device = gpu
 
     sprite = _make_sprite()
@@ -65,7 +77,7 @@ def test_texture_upload_idempotence(n_calls):
         renderer.draw_sprite(sprite)
 
     # create_texture must have been called exactly once regardless of n_calls
-    assert gpu.create_texture.call_count == 1
+    assert gpu.create_texture_call_count == 1
 
 
 # ---------------------------------------------------------------------------
@@ -110,9 +122,7 @@ def test_invisible_sprite_skipped(n_invisible):
     IGPUDevice.draw() and must not increment draw_count.
     """
     renderer = Renderer2D()
-    gpu = HeadlessGPU()
-    # Spy on draw() to verify it is never called
-    gpu.draw = MagicMock(side_effect=gpu.draw)
+    gpu = TrackedHeadlessGPU()
     renderer.gpu_device = gpu
 
     renderer.tick(0.0)
@@ -122,4 +132,4 @@ def test_invisible_sprite_skipped(n_invisible):
         renderer.draw_sprite(sprite)
 
     assert renderer.draw_count == 0
-    assert gpu.draw.call_count == 0
+    assert gpu.draw_call_count == 0

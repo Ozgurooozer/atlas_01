@@ -1,12 +1,11 @@
 import pytest
-from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D
 from engine.renderer.renderer import Renderer2D
 from hal.interfaces import IGPUDevice
 
 def test_deferred_light_limit():
     """Gereksinim 3.2.1: Deferred enabled iken 50+ ışık eklenebilir."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     lr = LightRenderer(gpu, 800, 600)
     lr.deferred_enabled = True
     
@@ -18,7 +17,7 @@ def test_deferred_light_limit():
 
 def test_forward_deferred_mutex():
     """Gereksinim 3.3: Forward/Deferred mutex kontrolü."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     renderer = Renderer2D()
     renderer.gpu_device = gpu
     renderer.set_light_renderer(LightRenderer(gpu, 800, 600))

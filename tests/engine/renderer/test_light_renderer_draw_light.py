@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D, LightType
 from core.color import Color
 from core.vec import Vec2
@@ -6,7 +5,7 @@ from hal.interfaces import IGPUDevice
 
 def test_light_renderer_end_light_pass_draw_light_call():
     """Gereksinim 5.1, 5.2: end_light_pass() gpu.draw_light() çağırmalı."""
-    gpu = MagicMock(spec=IGPUDevice)
+    gpu = MockGPU()
     lr = LightRenderer(gpu, 800, 600)
     
     light = Light2D(
