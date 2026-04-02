@@ -3,8 +3,32 @@
 Test-First Development for Game Loop
 """
 import pytest
-from unittest.mock import MagicMock
 from engine.loop import GameLoop, LoopPhase, FixedTimestep
+
+
+class MockHandler:
+    """Simple mock handler for testing without unittest.mock."""
+    
+    def __init__(self):
+        self.call_count = 0
+        self.calls = []
+        self.called = False
+    
+    def __call__(self, *args, **kwargs):
+        self.call_count += 1
+        self.calls.append((args, kwargs))
+        self.called = True
+    
+    def assert_called_once(self):
+        assert self.call_count == 1, f"Expected 1 call, got {self.call_count}"
+    
+    def assert_not_called(self):
+        assert self.call_count == 0, f"Expected no calls, got {self.call_count}"
+    
+    def reset(self):
+        self.call_count = 0
+        self.calls = []
+        self.called = False
 
 
 class TestLoopPhase:
@@ -83,7 +107,7 @@ class TestGameLoop:
     def test_register_handlers(self):
         """Test handler registration."""
         loop = GameLoop()
-        mock_handler = MagicMock()
+        mock_handler = MockHandler()
         
         loop.on(LoopPhase.UPDATE, mock_handler)
         
@@ -92,7 +116,7 @@ class TestGameLoop:
     def test_unregister_handlers(self):
         """Test handler unregistration."""
         loop = GameLoop()
-        mock_handler = MagicMock()
+        mock_handler = MockHandler()
         
         loop.on(LoopPhase.UPDATE, mock_handler)
         loop.off(LoopPhase.UPDATE, mock_handler)
@@ -102,7 +126,7 @@ class TestGameLoop:
     def test_single_update_step(self):
         """Test single update step."""
         loop = GameLoop(target_fps=60)
-        update_handler = MagicMock()
+        update_handler = MockHandler()
         
         loop.on(LoopPhase.UPDATE, update_handler)
         loop.start()
@@ -115,7 +139,7 @@ class TestGameLoop:
     def test_multiple_fixed_updates(self):
         """Test multiple fixed updates in one frame."""
         loop = GameLoop(target_fps=60)
-        update_handler = MagicMock()
+        update_handler = MockHandler()
         
         loop.on(LoopPhase.UPDATE, update_handler)
         loop.start()
@@ -129,7 +153,7 @@ class TestGameLoop:
     def test_render_called(self):
         """Test render is called with alpha."""
         loop = GameLoop(target_fps=60)
-        render_handler = MagicMock()
+        render_handler = MockHandler()
         
         loop.on(LoopPhase.RENDER, render_handler)
         loop.start()
@@ -137,14 +161,14 @@ class TestGameLoop:
         loop.step(1/60)
         
         render_handler.assert_called_once()
-        args = render_handler.call_args[0]
+        args = render_handler.calls[0][0]
         assert len(args) == 1  # alpha value
         assert 0.0 <= args[0] <= 1.0
     
     def test_delta_time_passed_to_update(self):
         """Test delta time is passed to update."""
         loop = GameLoop(target_fps=60)
-        update_handler = MagicMock()
+        update_handler = MockHandler()
         
         loop.on(LoopPhase.UPDATE, update_handler)
         loop.start()
@@ -152,7 +176,7 @@ class TestGameLoop:
         loop.step(1/60)
         
         # Check delta time is approximately timestep
-        args = update_handler.call_args[0]
+        args = update_handler.calls[0][0]
         assert len(args) == 1  # dt value
         assert args[0] == pytest.approx(1/60, rel=0.1)
     
@@ -186,7 +210,7 @@ class TestGameLoop:
         loop.pause()
         assert loop.is_paused is True
         
-        update_handler = MagicMock()
+        update_handler = MockHandler()
         loop.on(LoopPhase.UPDATE, update_handler)
         
         loop.step(1/60)
@@ -213,7 +237,7 @@ class TestGameLoop:
         loop = GameLoop(target_fps=60)
         loop.set_max_updates_per_frame(2)
         
-        update_handler = MagicMock()
+        update_handler = MockHandler()
         loop.on(LoopPhase.UPDATE, update_handler)
         loop.start()
         
@@ -226,7 +250,7 @@ class TestGameLoop:
     def test_startup_handler_called(self):
         """Test startup phase handler."""
         loop = GameLoop()
-        startup_handler = MagicMock()
+        startup_handler = MockHandler()
         
         loop.on(LoopPhase.STARTUP, startup_handler)
         loop.start()
@@ -236,7 +260,7 @@ class TestGameLoop:
     def test_shutdown_handler_called(self):
         """Test shutdown phase handler."""
         loop = GameLoop()
-        shutdown_handler = MagicMock()
+        shutdown_handler = MockHandler()
         
         loop.on(LoopPhase.SHUTDOWN, shutdown_handler)
         loop.start()
@@ -247,8 +271,8 @@ class TestGameLoop:
     def test_clear_handlers(self):
         """Test clearing all handlers for a phase."""
         loop = GameLoop()
-        handler1 = MagicMock()
-        handler2 = MagicMock()
+        handler1 = MockHandler()
+        handler2 = MockHandler()
         
         loop.on(LoopPhase.UPDATE, handler1)
         loop.on(LoopPhase.UPDATE, handler2)

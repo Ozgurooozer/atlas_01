@@ -4,7 +4,6 @@ Pytest configuration and fixtures for ATLAS 2D Engine.
 Provides headless testing support and common fixtures.
 """
 import os
-import sys
 
 # Set up headless environment before any pyglet imports
 os.environ['PYGLET_SHADOW_WINDOW'] = '1'

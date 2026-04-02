@@ -141,7 +141,7 @@ def main():
         # Custom checks
         ("No mocks", "python scripts/check_no_mock.py 2>&1", True),
         ("Import rules OK", "python scripts/check_imports.py 2>&1", True),
-        ("No layer violations", "python scripts/check_layer_violations.py 2>&1", True),
+        ("No layer violations", "python scripts/pre_commit/check_layer_violations.py 2>&1", True),
         
         # Type checking
         ("Type coverage OK", "mypy . --ignore-missing-imports 2>&1", True),
