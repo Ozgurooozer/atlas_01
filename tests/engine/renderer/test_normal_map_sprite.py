@@ -1,7 +1,6 @@
 from engine.renderer.renderer import Renderer2D
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
-from hal.interfaces import IGPUDevice
 
 def test_renderer_draw_sprite_normal_map_branch():
     """Gereksinim 6.1, 6.2: Normal map varsa draw_with_normal_map çağrılmalı."""

@@ -1,7 +1,6 @@
 import pytest
 from engine.renderer.light import LightRenderer, Light2D
 from engine.renderer.renderer import Renderer2D
-from hal.interfaces import IGPUDevice
 
 def test_deferred_light_limit():
     """Gereksinim 3.2.1: Deferred enabled iken 50+ ışık eklenebilir."""

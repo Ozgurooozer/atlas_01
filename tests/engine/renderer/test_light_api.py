@@ -9,7 +9,6 @@ from engine.renderer.light import LightRenderer, Light2D, LightType
 from engine.renderer.postprocess_stack import (
     PostProcessPass, BloomPass, ColorGradingPass, VignettePass, FXAAPass
 )
-from hal.interfaces import IGPUDevice
 
 
 class MockObject:

@@ -1,14 +1,23 @@
 """Tests for UI Panel.
 
+Test-First Development for UI Panel widget
+"""
+
+
 class MockObject:
     """Simple mock for testing."""
     def __init__(self):
         self.call_count = 0
         self.call_args = None
+        self.update_called = False
+        self.update_dt = None
+    
+    def update(self, dt: float) -> None:
+        """Mock update method."""
+        self.update_called = True
+        self.update_dt = dt
 
 
-Test-First Development for UI Panel widget
-"""
 from ui.panel import Panel
 from ui.label import Label
 from ui.button import Button
@@ -149,7 +158,8 @@ class TestPanel:
         
         panel.update(0.016)
         
-        child.update.assert_called_once_with(0.016)
+        assert child.update_called is True
+        assert child.update_dt == 0.016
     
     def test_set_padding(self):
         """Test setting padding."""

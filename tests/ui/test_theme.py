@@ -13,8 +13,9 @@ class MockWidget:
         self.theme_applied = False
         self.style = {}
     
-    def update_style(self, **kwargs):
-        self.style.update(kwargs)
+    def update_style(self, theme: Theme) -> None:
+        """Mock update_style method."""
+        self.style['theme'] = theme
         self.theme_applied = True
 
 

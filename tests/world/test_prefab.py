@@ -1,5 +1,9 @@
 """Tests for Prefab system.
 
+Test-First Development for Prefab management
+"""
+
+
 class MockObject:
     """Simple mock for testing."""
     def __init__(self):
@@ -7,8 +11,6 @@ class MockObject:
         self.call_args = None
 
 
-Test-First Development for Prefab management
-"""
 import pytest
 from world.prefab import Prefab, PrefabInstance, PrefabManager, ComponentData
 

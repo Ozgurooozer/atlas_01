@@ -1,33 +1,37 @@
-```gitignore
+```
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-python/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-*.pot
-*.pyc
-*.pyo
-*.pyd
 *.so
 *.egg-info/
 .eggs/
-.venv/
-venv/
-env/
-ENV/
-requirements.txt.bak
-requirements-dev.txt.bak
+
+# Testing
 .hypothesis/
+.pytest_cache/
+
+# Build and distribution
+dist/
+build/
+*.egg
+*.whl
+coverage/
+htmlcov/
+.coverage
+
+# Virtual environments
+venv/
+.venv/
+env/
+.ENV
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

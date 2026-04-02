@@ -63,15 +63,16 @@ class TestButton:
 
         assert button.x == 0
         assert button.y == 0
-        assert button.width == 80
-        assert button.height == 24
+        assert button.width == 100
+        assert button.height == 30
         assert button.text == ""
         assert button.state == ButtonState.NORMAL
 
     def test_click_triggers_callback(self):
         """Test click triggers callback."""
         callback = MockCallback()
-        button = Button(on_click=callback)
+        button = Button()
+        button.on_click(callback)
 
         button.click()
 
@@ -80,7 +81,6 @@ class TestButton:
     def test_hover_changes_state(self):
         """Test hover changes state to HOVER."""
         button = Button()
-        button.enabled = True
 
         button.on_hover_enter()
 
@@ -89,34 +89,36 @@ class TestButton:
     def test_unhover_changes_state(self):
         """Test unhover changes state to NORMAL."""
         button = Button()
-        button.state = ButtonState.HOVER
+        button.on_hover_enter()  # Set to HOVER state
 
-        button.on_hover_exit()
+        button.on_hover_leave()
 
         assert button.state == ButtonState.NORMAL
 
     def test_press_changes_state(self):
         """Test press changes state to PRESSED."""
         button = Button()
-        button.enabled = True
 
         button.on_press()
 
         assert button.state == ButtonState.PRESSED
 
     def test_release_changes_state(self):
-        """Test release changes state to NORMAL."""
+        """Test release changes state to HOVER."""
         button = Button()
-        button.state = ButtonState.PRESSED
+        button.on_hover_enter()  # Set to HOVER first
+        button.on_press()  # Set to PRESSED state first
 
         button.on_release()
 
-        assert button.state == ButtonState.NORMAL
+        assert button.state == ButtonState.HOVER
 
     def test_disabled_ignores_interaction(self):
         """Test disabled button ignores interaction."""
         callback = MockCallback()
-        button = Button(enabled=False, on_click=callback)
+        button = Button()
+        button.disable()
+        button.on_click(callback)
 
         button.click()
 

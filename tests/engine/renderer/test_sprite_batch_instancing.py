@@ -1,8 +1,6 @@
 from engine.renderer.batch import SpriteBatch
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
-from engine.renderer.renderer import Renderer2D
-from hal.interfaces import IGPUDevice
 
 
 class MockGPU:

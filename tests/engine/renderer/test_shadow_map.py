@@ -1,6 +1,5 @@
 from engine.renderer.shadow_map import ShadowMapRenderer
 from engine.renderer.light import LightRenderer, Light2D
-from hal.interfaces import IGPUDevice
 
 def test_shadow_map_renderer_lifecycle():
     """Gereksinim 1.2.4: ShadowMapRenderer kaynak yönetimi testi."""

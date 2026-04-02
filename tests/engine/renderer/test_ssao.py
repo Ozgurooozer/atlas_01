@@ -1,7 +1,6 @@
 from engine.renderer.ssao import SSAOPass
 from engine.renderer.gbuffer import GBuffer
 from engine.renderer.renderer import Renderer2D
-from hal.interfaces import IGPUDevice
 
 def test_ssao_pass_kernel_size():
     """Gereksinim 2.8.4: Kernel boyutu 64 olduğunu doğrula."""
