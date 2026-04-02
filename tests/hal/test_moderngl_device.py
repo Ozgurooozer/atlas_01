@@ -120,7 +120,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.3
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         tid = device.create_texture(64, 64)
         assert isinstance(tid, int)
         assert tid > 0
@@ -130,7 +130,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.3, 2.4
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         ids = [device.create_texture(4, 4) for _ in range(5)]
         assert len(ids) == len(set(ids))
 
@@ -139,7 +139,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.3, 2.4
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         id1 = device.create_texture(4, 4)
         id2 = device.create_texture(4, 4)
         assert id2 == id1 + 1
@@ -149,7 +149,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.1
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         tid = device.create_texture(8, 8)
         assert tid in device._textures
 
@@ -158,7 +158,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.2
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         w, h = 4, 4
         device.create_texture(w, h, data=None)
 
@@ -172,7 +172,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.2
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         w, h = 16, 8
         device.create_texture(w, h, data=None)
 
@@ -185,7 +185,7 @@ class TestCreateTexture:
 
         Validates: Requirements 2.1
         """
-        device, mock_ctx = self._make_device()
+        device, mock_ctx = self._make_device(headless_window)
         w, h = 2, 2
         pixel_data = bytes([255, 0, 0, 255] * (w * h))
         device.create_texture(w, h, data=pixel_data)

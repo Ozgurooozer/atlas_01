@@ -1,34 +1,17 @@
 ```
-# Python compiled files
-__pycache__/
+# Compiled Python files
 *.pyc
-*.pyo
-*.pyd
+__pycache__/
 
-# Test coverage reports
-.coverage
-htmlcov/
-.coverage.*
-
-# Compressed files
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.zip
-*.7z
-*.rar
-
-# Logs
-*.log
+# Test cache
+.hypothesis/
+.pytest_cache/
 
 # Environment files
 .env
 .env.local
 *.env.*
 
-# Dependencies and build artifacts
-.hypothesis/
-
+# Logs
+*.log
 ```
