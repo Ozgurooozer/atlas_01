@@ -1,0 +1,4 @@
+# file: /workspace/world/components/sprite_component.py
+# hypothesis_version: 6.151.10
+
+[255, 'color', 'flip_x', 'flip_y', 'z_index']

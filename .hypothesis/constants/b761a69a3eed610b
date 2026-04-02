@@ -1,0 +1,4 @@
+# file: /workspace/game/ai/enemy_ai.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.3, 0.5, 0.7, 0.8, 1.0, 1.5, 5.0, 30.0, 'AIState', 'ATTACK', 'Actor', 'AtPrefDist', 'CHASE', 'CanAttack', 'DEAD', 'DeadCheck', 'DefaultAttack', 'DefaultChase', 'EnemyAI', 'GoAttack', 'GoChase', 'GoDead', 'GoIdle', 'GoPatrol', 'GoRetreat', 'GoStunned', 'HasTarget', 'HoldPosition', 'IDLE', 'InRange', 'IsDead', 'IsStunned', 'MeleeAttack', 'MeleeChase', 'MeleeRetreat', 'NONE', 'NotPrefDist', 'PATROL', 'RETREAT', 'RangedAttack', 'RangedChase', 'Root', 'STUNNED', 'ShouldRetreat', 'StunCheck', 'TankAttack', 'TankChase', 'TooClose', '_internal_attack_cd', '_retreat_from_pos', 'attack', 'attack_on_cooldown', 'distance_to_target', 'enabled', 'fire_projectile', 'hp', 'inf', 'is_dead', 'is_stunned', 'max_hp', 'projectile_damage', 'projectile_speed', 'self_position', 'should_retreat', 'stun_duration', 'target', 'target_detected', 'target_position', 'target_too_close']

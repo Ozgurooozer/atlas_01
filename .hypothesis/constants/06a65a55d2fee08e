@@ -1,0 +1,4 @@
+# file: /workspace/game/combat/hit_stop.py
+# hypothesis_version: 6.151.10
+
+['HitStopController', 'max_frames', 'remaining_frames']

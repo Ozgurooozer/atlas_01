@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/camera.py
+# hypothesis_version: 6.151.10
+
+[-2.0, -1.0, 0.0, 0.1, 1.0, 2.0, 600, 800, 'Invalid camera mode', 'isometric', 'position', 'side_scroll']

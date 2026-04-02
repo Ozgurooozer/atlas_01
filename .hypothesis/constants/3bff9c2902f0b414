@@ -1,0 +1,4 @@
+# file: /workspace/editor/hierarchy.py
+# hypothesis_version: 6.151.10
+
+['Hierarchy', 'children', 'expanded', 'guid', 'name']

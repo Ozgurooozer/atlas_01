@@ -1,0 +1,4 @@
+# file: /workspace/game/run/room_templates.py
+# hypothesis_version: 6.151.10
+
+[100, 150, 200, 220, 250, 260, 270, 300, 320, 350, 360, 380, 400, 420, 440, 450, 470, 480, 500, 520, 530, 550, 580, 600, 620, 650, 680, 700, 750, 780, 790, 800, 900, 990, 1000, 1190, 1200, 1390, 1400, 'RoomTemplateLibrary', 'boss_arena_01', 'combat_large_01', 'combat_large_02', 'combat_large_03', 'combat_medium_01', 'combat_medium_02', 'combat_medium_03', 'combat_medium_04', 'combat_medium_05', 'combat_small_01', 'combat_small_02', 'combat_small_03', 'combat_small_04', 'combat_small_05', 'door_locations', 'h', 'height', 'left', 'name', 'platforms', 'recent_count', 'recent_names', 'right', 'side', 'spawn_zones', 'templates', 'treasure_room_01', 'w', 'width', 'x', 'y']

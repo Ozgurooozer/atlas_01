@@ -1,0 +1,4 @@
+# file: /workspace/game/combat/model.py
+# hypothesis_version: 6.151.10
+
+[0.0, 'combat_end', 'combat_start', 'critical_hit', 'damage_dealt', 'damage_received', 'death', 'dodge', 'heal', 'status_applied', 'status_removed']

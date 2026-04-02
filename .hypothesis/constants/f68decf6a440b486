@@ -1,0 +1,4 @@
+# file: /workspace/game/quest/quest.py
+# hypothesis_version: 6.151.10
+
+['Quest', 'QuestManager', 'active', 'completed', 'description', 'failed', 'inactive', 'status']

@@ -1,0 +1,4 @@
+# file: /workspace/scripting/behaviour_tree.py
+# hypothesis_version: 6.151.10
+
+['Action', 'ActionNode', 'BTNode', 'BehaviourTree', 'Condition', 'ConditionNode', 'Inverter', 'NodeStatus', 'Parallel', 'Repeater', 'Selector', 'Sequence', 'failure', 'running', 'success']

@@ -1,0 +1,4 @@
+# file: /workspace/editor/__init__.py
+# hypothesis_version: 6.151.10
+
+['AssetBrowser', 'Editor', 'EditorPanel', 'Hierarchy', 'Properties', 'Viewport']

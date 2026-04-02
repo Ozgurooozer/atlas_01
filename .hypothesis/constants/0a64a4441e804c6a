@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/light.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.1, 1.0, 2.0, 4.0, 200.0, 1000, 'ShadowMapRenderer', 'ambient', 'directional', 'point']

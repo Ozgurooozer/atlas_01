@@ -1,0 +1,4 @@
+# file: /workspace/hal/pyglet_backend.py
+# hypothesis_version: 6.151.10
+
+[-2.0, -1.0, 0.0, 0.1, 0.5, 1.0, 2.0, 600, 800, 10000, '16f', '2f', '2f 2f', '2f 2f 4f', '32f', '8f', 'Engine', 'IFramebuffer', '_color_textures', '_depth_tex', '_fsq_vbo', 'a_color', 'a_inst_anchor', 'a_inst_color', 'a_inst_flip', 'a_inst_pos', 'a_inst_rotation', 'a_inst_size', 'a_inst_uv_offset', 'a_inst_uv_size', 'a_position', 'a_texcoord', 'button', 'color', 'dx', 'dy', 'falloff', 'height', 'intensity', 'key_press', 'key_release', 'moderngl.Context', 'moderngl.Program', 'moderngl.Texture', 'modifiers', 'mouse_motion', 'mouse_press', 'mouse_release', 'position', 'radius', 'resize', 'symbol', 'type', 'u_ambient', 'u_anchor', 'u_color', 'u_light_color', 'u_light_count', 'u_light_falloff', 'u_light_intensity', 'u_light_pos', 'u_light_radius', 'u_normal_map', 'u_position', 'u_projection', 'u_rotation', 'u_size', 'u_texture', 'u_view', 'width', 'x', 'y']

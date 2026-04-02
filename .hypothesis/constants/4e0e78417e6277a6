@@ -1,0 +1,4 @@
+# file: /workspace/world/components/combat_stats_component.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.05, 1.0, 2.0, 5.0, 10.0, 200.0, 'base_attack', 'base_attack_speed', 'base_crit_chance', 'base_crit_multiplier', 'base_defense', 'base_speed']

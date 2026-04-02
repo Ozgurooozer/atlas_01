@@ -1,0 +1,4 @@
+# file: /workspace/game/run/game_rng.py
+# hypothesis_version: 6.151.10
+
+[2246822519, 2654435761, 4294967295, 'GameRNG', 'seed', 'state']

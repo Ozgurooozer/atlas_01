@@ -1,0 +1,4 @@
+# file: /workspace/game/run/run_controller.py
+# hypothesis_version: 6.151.10
+
+[0.0, 'RunController', 'death_count', 'kill_count', 'phase', 'room_graph', 'room_index', 'run_number', 'run_time', 'seed', 'total_rooms']

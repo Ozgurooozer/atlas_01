@@ -1,0 +1,4 @@
+# file: /workspace/world/components/health_component.py
+# hypothesis_version: 6.151.10
+
+[0.0, 100.0, 'hp', 'invincible_duration', 'is_dead', 'max_hp']

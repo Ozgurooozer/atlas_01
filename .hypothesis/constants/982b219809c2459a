@@ -1,0 +1,4 @@
+# file: /workspace/world/components/hitbox_component.py
+# hypothesis_version: 6.151.10
+
+[0.0, 10.0, 40.0, 'attack', 'base_damage', 'height', 'hits_max', 'knockback', 'offset_x', 'offset_y', 'tag', 'width']

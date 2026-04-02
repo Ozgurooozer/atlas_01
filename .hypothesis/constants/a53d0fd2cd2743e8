@@ -1,0 +1,4 @@
+# file: /workspace/game/progression/meta.py
+# hypothesis_version: 6.151.10
+
+['MetaProgression', 'best_run_room', 'cost', 'currency', 'is_unlocked', 'name', 'total_kills', 'total_runs', 'unlock_id', 'unlockables']

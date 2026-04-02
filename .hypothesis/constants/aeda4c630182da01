@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/sprite.py
+# hypothesis_version: 6.151.10
+
+[0.0, 0.5, 1.0, 255.0, 255, 'Material', 'Sprite', 'color', 'height', 'position_x', 'position_y', 'rotation', 'scale_x', 'scale_y', 'visible', 'width', 'x', 'y', 'z_index']

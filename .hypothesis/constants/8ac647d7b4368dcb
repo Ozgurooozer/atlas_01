@@ -1,0 +1,4 @@
+# file: /workspace/engine/renderer/__init__.py
+# hypothesis_version: 6.151.10
+
+['BloomPass', 'Camera', 'ColorGradingPass', 'FXAAPass', 'IRenderer', 'Material', 'PostProcessStack', 'Renderer2D', 'Sprite', 'SpriteBatch', 'Texture', 'TextureLoader', 'VignettePass']
