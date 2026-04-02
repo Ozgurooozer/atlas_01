@@ -3,9 +3,19 @@
 Test-First Development for UI Theme system
 """
 import pytest
-from unittest.mock import MagicMock
 from ui.theme import Theme, ThemeManager, ColorScheme
 from core.color import Color
+
+
+class MockWidget:
+    """Simple mock widget for testing."""
+    def __init__(self):
+        self.theme_applied = False
+        self.style = {}
+    
+    def update_style(self, **kwargs):
+        self.style.update(kwargs)
+        self.theme_applied = True
 
 
 class TestColorScheme:
@@ -167,7 +177,7 @@ class TestThemeManager:
     def test_apply_to_widget(self):
         """Test applying theme to widget."""
         manager = ThemeManager()
-        widget = MagicMock()
+        widget = MockWidget()
         
         manager.apply_to(widget)
         

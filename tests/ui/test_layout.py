@@ -2,7 +2,6 @@
 
 Test-First Development for UI Layout system
 """
-from unittest.mock import MagicMock
 from ui.layout import Layout, HorizontalLayout, VerticalLayout, GridLayout
 from ui.label import Label
 from ui.panel import Panel
@@ -12,6 +11,14 @@ class ConcreteLayout(Layout):
     """Concrete layout for testing base class."""
     def arrange(self, container):
         pass
+
+
+class MockContainer:
+    """Simple mock container for testing."""
+    def __init__(self):
+        self.children = []
+        self.width = 800
+        self.height = 600
 
 
 class TestLayout:
@@ -40,7 +47,7 @@ class TestLayout:
     def test_arrange_raises(self):
         """Test base arrange raises NotImplementedError."""
         layout = ConcreteLayout()
-        container = MagicMock()
+        container = MockContainer()
         
         # Concrete implementation should not raise
         layout.arrange(container)  # Should pass without error

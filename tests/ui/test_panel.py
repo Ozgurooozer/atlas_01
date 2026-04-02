@@ -1,8 +1,14 @@
 """Tests for UI Panel.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+
 Test-First Development for UI Panel widget
 """
-from unittest.mock import MagicMock
 from ui.panel import Panel
 from ui.label import Label
 from ui.button import Button
@@ -138,7 +144,7 @@ class TestPanel:
     def test_update_propagates(self):
         """Test update propagates to children."""
         panel = Panel()
-        child = MagicMock()
+        child = MockObject()
         panel.add_child(child)
         
         panel.update(0.016)

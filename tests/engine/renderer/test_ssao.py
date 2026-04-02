@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from engine.renderer.ssao import SSAOPass
 from engine.renderer.gbuffer import GBuffer
 from engine.renderer.renderer import Renderer2D

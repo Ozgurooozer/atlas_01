@@ -1,11 +1,17 @@
 """
 LightRenderer public API testleri.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+
 get_visible_point_lights() — private _lights erişimi yerine kullanılacak API.
 PostProcessPass fail-fast uyarısı.
 """
 import warnings
-from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D, LightType
 from engine.renderer.postprocess_stack import (
     PostProcessPass, BloomPass, ColorGradingPass, VignettePass, FXAAPass
@@ -68,7 +74,7 @@ def test_get_visible_point_lights_default_max_8():
 # ---------------------------------------------------------------------------
 
 def _make_fbo():
-    fbo = MagicMock()
+    fbo = MockObject()
     fbo.width = 800
     fbo.height = 600
     return fbo

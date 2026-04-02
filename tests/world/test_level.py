@@ -1,9 +1,25 @@
 """Tests for Level system.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+class MockCallback:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+    def __call__(self, *args, **kwargs):
+        self.call_count += 1
+        self.call_args = (args, kwargs)
+
+
 Test-First Development for Level management
 """
 import pytest
-from unittest.mock import MagicMock
 from world.level import Level, LevelManager, SpawnPoint, TileMap
 from world.actor import Actor
 from core.vec import Vec3
@@ -179,7 +195,7 @@ class TestLevel:
     def test_load_calls_on_load(self):
         """Test load calls on_load callback."""
         level = Level()
-        on_load = MagicMock()
+        on_load = MockCallback()
         level.on_load = on_load
         
         level.load()
@@ -317,7 +333,7 @@ class TestLevelManager:
         """Test update propagates to current level."""
         manager = LevelManager()
         level = Level(name="test")
-        level.update = MagicMock()
+        level.update = MockObject()
         manager.register_level(level)
         manager.load_level("test")
         
@@ -329,8 +345,8 @@ class TestLevelManager:
         """Test reloading current level."""
         manager = LevelManager()
         level = Level(name="test")
-        level.load = MagicMock()
-        level.unload = MagicMock()
+        level.load = MockObject()
+        level.unload = MockObject()
         manager.register_level(level)
         manager.load_level("test")
         

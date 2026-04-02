@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from engine.renderer.light import LightRenderer, Light2D, LightType
 from core.color import Color
 from core.vec import Vec2

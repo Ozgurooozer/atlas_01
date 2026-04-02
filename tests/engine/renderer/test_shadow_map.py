@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from engine.renderer.shadow_map import ShadowMapRenderer
 from engine.renderer.light import LightRenderer, Light2D
 from hal.interfaces import IGPUDevice

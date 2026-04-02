@@ -1,9 +1,15 @@
-from unittest.mock import MagicMock
 from engine.renderer.batch import SpriteBatch
 from engine.renderer.sprite import Sprite
 from engine.renderer.texture import Texture
 from engine.renderer.renderer import Renderer2D
 from hal.interfaces import IGPUDevice
+
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
 
 def test_sprite_batch_instancing_draw_call_count():
     """Gereksinim 1.2: N sprite, 1 texture -> draw_instanced() tam 1 kez çağrılır."""
@@ -13,7 +19,7 @@ def test_sprite_batch_instancing_draw_call_count():
     renderer._camera = None
     
     # Mock _ensure_uploaded to do nothing
-    renderer._ensure_uploaded = MagicMock()
+    renderer._ensure_uploaded = MockObject()
     
     batch = SpriteBatch(renderer, instancing_enabled=True)
     

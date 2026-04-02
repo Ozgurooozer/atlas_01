@@ -1,8 +1,24 @@
 """Tests for UI Button.
 
+class MockObject:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+class MockCallback:
+    """Simple mock for testing."""
+    def __init__(self):
+        self.call_count = 0
+        self.call_args = None
+
+    def __call__(self, *args, **kwargs):
+        self.call_count += 1
+        self.call_args = (args, kwargs)
+
+
 Test-First Development for UI Button widget
 """
-from unittest.mock import MagicMock
 from ui.button import Button, ButtonState
 
 
@@ -67,7 +83,7 @@ class TestButton:
     def test_on_click(self):
         """Test click callback."""
         button = Button()
-        callback = MagicMock()
+        callback = MockCallback()
         
         button.on_click(callback)
         button.click()
@@ -77,7 +93,7 @@ class TestButton:
     def test_click_disabled(self):
         """Test click when disabled."""
         button = Button()
-        callback = MagicMock()
+        callback = MockCallback()
         button.on_click(callback)
         button.disable()
         
@@ -129,8 +145,8 @@ class TestButton:
     def test_multiple_callbacks(self):
         """Test multiple click callbacks."""
         button = Button()
-        callback1 = MagicMock()
-        callback2 = MagicMock()
+        callback1 = MockObject()
+        callback2 = MockObject()
         
         button.on_click(callback1)
         button.on_click(callback2)
@@ -142,7 +158,7 @@ class TestButton:
     def test_remove_callback(self):
         """Test removing callback."""
         button = Button()
-        callback = MagicMock()
+        callback = MockCallback()
         
         button.on_click(callback)
         button.off_click(callback)
